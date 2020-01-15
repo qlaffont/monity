@@ -6,6 +6,11 @@
     "build": "next build && tsc --project tsconfig.server.json",
     "start": "NODE_ENV=production node ./dist/server.js"
   },
+  "husky": {
+    "hooks": {
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
+    }
+  },
   "dependencies": {
     "@zeit/next-sass": "^1.0.1",
     "cross-env": "^6.0.3",
@@ -18,7 +23,15 @@
   "devDependencies": {
     "@types/node": "^13.1.7",
     "@types/react": "^16.9.17",
+    "commitizen": "^4.0.3",
+    "cz-conventional-changelog": "^3.0.2",
+    "husky": "^4.0.10",
     "ts-node": "^8.6.2",
     "typescript": "^3.7.4"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
