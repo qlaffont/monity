@@ -4,11 +4,14 @@
   "scripts": {
     "dev": "ts-node --project tsconfig.server.json server/server.ts",
     "build": "next build && tsc --project tsconfig.server.json",
-    "start": "NODE_ENV=production node ./dist/server.js"
+    "start": "NODE_ENV=production node ./dist/server.js",
+    "lint": "npm run lint:srv",
+    "lint:srv": "npx eslint server --ext .ts"
   },
   "husky": {
     "hooks": {
-      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
+      "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true",
+      "pre-commit": "npm run lint"
     }
   },
   "dependencies": {
