@@ -6,16 +6,16 @@ const CheckerSchema = new Schema({
     required: true,
   },
   description: {
-    type: String
+    type: String,
   },
   type: {
     type: String,
     required: true,
-    enum: ['ping', 'http']
+    enum: ['ping', 'http'],
   },
   active: {
     type: Boolean,
-    default: false
+    default: false,
   },
   checkerId: {
     type: Schema.Types.ObjectId,

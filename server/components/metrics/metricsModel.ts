@@ -12,7 +12,7 @@ const MetricSchema = new Schema({
   checkerId: {
     type: Schema.Types.ObjectId,
     ref: 'Checker',
-    required: true
+    required: true,
   },
 });
 

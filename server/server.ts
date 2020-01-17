@@ -1,35 +1,35 @@
-import Fastify from 'fastify'
-import Next from 'next'
-import conf from '../next.config'
+import Fastify from 'fastify';
+import Next from 'next';
 import { Worker } from 'worker_threads';
 
-const fastify = Fastify({ logger: { level: "error" } });
+import conf from '../next.config';
+import RouteLoaderConfig from './config/routes';
 
-const port = parseInt(process.env.PORT|| "3000", 10);
-const dev = process.env.NODE_ENV !== "production";
+const fastify = Fastify({ logger: { level: 'error' } });
+
+const port = parseInt(process.env.PORT || '3000', 10);
+const dev = process.env.NODE_ENV !== 'production';
 
 const worker = new Worker('./server/worker/index.js');
 
 fastify.register((fastify, _opts, next) => {
-  const app = Next({ dev, conf: conf});
+  const app = Next({ dev, conf: conf });
   app
     .prepare()
     .then(() => {
       const handle = app.getRequestHandler();
       if (dev) {
-        fastify.get("/_next/*", (req, reply) => {
+        fastify.get('/_next/*', (req, reply) => {
           return handle(req.req, reply.res).then(() => {
             reply.sent = true;
           });
         });
       }
 
-      // Add back request here
-      fastify.get("/ping", (_req, reply) => {
-        reply.send({message: "Ping !"})
-      })
+      // Load Routes
+      RouteLoaderConfig(fastify, worker);
 
-      fastify.all("/*", (req, reply) => {
+      fastify.all('/*', (req, reply) => {
         return handle(req.req, reply.res).then(() => {
           reply.sent = true;
         });
