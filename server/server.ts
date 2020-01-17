@@ -1,12 +1,14 @@
 import Fastify from 'fastify'
 import Next from 'next'
-import withSASS from  '@zeit/next-sass'
 import conf from '../next.config'
+import { Worker } from 'worker_threads';
 
 const fastify = Fastify({ logger: { level: "error" } });
 
 const port = parseInt(process.env.PORT|| "3000", 10);
 const dev = process.env.NODE_ENV !== "production";
+
+const worker = new Worker('./server/worker/index.js');
 
 fastify.register((fastify, _opts, next) => {
   const app = Next({ dev, conf: conf});

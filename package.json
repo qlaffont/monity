@@ -13,13 +13,16 @@
   },
   "dependencies": {
     "@zeit/next-sass": "^1.0.1",
+    "cron": "^1.7.2",
     "cross-env": "^6.0.3",
     "fastify": "2.11.0",
     "mongoose": "^5.8.7",
     "next": "latest",
+    "node-fetch": "^2.6.0",
     "node-sass": "^4.13.0",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "react-dom": "^16.12.0",
+    "tcp-ping": "^0.1.1"
   },
   "devDependencies": {
     "@types/node": "^13.1.7",
