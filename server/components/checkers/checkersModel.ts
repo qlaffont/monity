@@ -13,13 +13,20 @@ const CheckerSchema = new Schema({
     required: true,
     enum: ['ping', 'http'],
   },
+  address: {
+    type: String,
+    required: true,
+  },
+  port: {
+    type: Number,
+  },
   active: {
     type: Boolean,
     default: false,
   },
-  checkerId: {
+  groupId: {
     type: Schema.Types.ObjectId,
-    ref: 'Checker',
+    ref: 'Group',
   },
 });
 
