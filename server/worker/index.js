@@ -15,7 +15,7 @@ if (isMainThread) {
  */
 const pingCall = data => {
   ping({ address: data.address, port: data.port, timeout: 1000 }, (err, res) => {
-    if (err || Number.isNaN(avg)) {
+    if (err || Number.isNaN(res.avg)) {
       parentPort.postMessage({ cmd: 'cb', id: data.id, ms: 0, code: 500 });
     } else {
       parentPort.postMessage({ cmd: 'cb', id: data.id, ms: Math.round(res.avg), code: 200 });
