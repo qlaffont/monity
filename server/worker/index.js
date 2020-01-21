@@ -81,21 +81,33 @@ const stop = data => {
   delete crons[data.id];
 };
 
-parentPort.on('message', function(data) {
-  if (process.env.DEBUG_WORKER) {
-    parentPort.postMessage({
-      cmd: 'debug',
-      log: 'W CMD -> ' + JSON.stringify(data),
-    });
-  }
+/**
+ * Get Crons Object
+ */
+const info = () => {
+  const keys = Object.keys(crons);
+  parentPort.postMessage({ cmd: 'info', data: keys });
+};
 
-  switch (data.cmd) {
-    case 'init':
-      start(data);
-      break;
-    case 'stop':
-      stop(data);
-      break;
-    default:
+parentPort.on('message', function(data) {
+  if (typeof data === 'object') {
+    if (process.env.DEBUG_WORKER && data.cmd && data.cmd !== 'info') {
+      parentPort.postMessage({
+        cmd: 'debug',
+        log: 'W CMD -> ' + JSON.stringify(data),
+      });
+    }
+
+    switch (data.cmd) {
+      case 'init':
+        start(data);
+        break;
+      case 'stop':
+        stop(data);
+        break;
+      case 'info':
+        info();
+      default:
+    }
   }
 });
