@@ -1,9 +1,13 @@
-const { parentPort } = require('worker_threads');
+const { parentPort, isMainThread } = require('worker_threads');
 const { CronJob } = require('cron');
 const { ping } = require('tcp-ping');
 const fetch = require('node-fetch');
 
 const crons = {};
+
+if (isMainThread) {
+  throw new Error('This file is a worker.');
+}
 
 /**
  * Make Ping Call from Data
