@@ -26,6 +26,37 @@ fastify.register((fastify, _opts, next) => {
         });
       }
 
+      if (process.env.NODE_ENV !== 'production') {
+        fastify.register(require('fastify-swagger'), {
+          routePrefix: '/documentation',
+          mode: 'dynamic',
+          exposeRoute: true,
+          swagger: {
+            info: {
+              title: 'Monity',
+              version: require('../package.json').version,
+            },
+            externalDocs: {
+              url: 'https://github.com/qlaffont/monity',
+              description: 'Monity Repository',
+            },
+            host: 'localhost:' + port,
+            schemes: ['http'],
+            consumes: ['application/json'],
+            produces: ['application/json'],
+            securityDefinitions: {
+              apiKey: {
+                type: 'apiKey',
+                name: 'Authorization',
+                in: 'header',
+              },
+            },
+          },
+        });
+      }
+
+      fastify.register(require('fastify-helmet'));
+
       // Load Routes
       RouteLoaderConfig(fastify, worker);
 
