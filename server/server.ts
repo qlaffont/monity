@@ -26,6 +26,8 @@ fastify.register((fastify, _opts, next) => {
         });
       }
 
+      fastify.decorate('authToken', '');
+
       fastify.addHook('onRequest', (_request, reply, done) => {
         reply.headers({
           'Access-Control-Allow-Methods': 'GET, PUT, DELETE, POST, OPTIONS',
