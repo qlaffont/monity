@@ -7,19 +7,19 @@ interface BoomOptions {
   data?: object;
 }
 
-const HandlingBoom = (obj: Boom<any>, res: FastifyReply<any>): void => {
+export const HandlingBoom = (obj: Boom<any>, res: FastifyReply<any>): void => {
   if (obj.output.payload.message === '') {
     delete obj.output.payload.message;
   }
   res.status(obj.output.statusCode).send(obj.output.payload);
 };
 
-const ReturnFormError = (res: FastifyReply<any>): void => {
+export const ReturnFormError = (res: FastifyReply<any>): void => {
   const error = badRequest('Form Error');
   HandlingBoom(error, res);
 };
 
-const ReturnSuccess = (res: FastifyReply<any>, msg = 'Success', options: BoomOptions = {}): void => {
+export const ReturnSuccess = (res: FastifyReply<any>, msg = 'Success', options: BoomOptions = {}): void => {
   const boomMessage = new Boom(msg, {
     statusCode: options.statusCode || 200,
     data: options.data || {},
@@ -28,7 +28,7 @@ const ReturnSuccess = (res: FastifyReply<any>, msg = 'Success', options: BoomOpt
   HandlingBoom(boomMessage, res);
 };
 
-const HandlingError = (res: FastifyReply<any>, err: Error): void => {
+export const HandlingError = (res: FastifyReply<any>, err: Error): void => {
   switch (err.message) {
     case 'Forbidden':
       HandlingBoom(forbidden('You are not allowed to do that !'), res);
