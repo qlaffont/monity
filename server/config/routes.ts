@@ -1,3 +1,4 @@
+// @ts-nocheck
 import PingRoutes from '../components/ping/pingRoutes';
 import { FastifyInstance } from 'fastify';
 

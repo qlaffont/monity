@@ -26,6 +26,15 @@ fastify.register((fastify, _opts, next) => {
         });
       }
 
+      fastify.addHook('onRequest', (_request, reply, done) => {
+        reply.headers({
+          'Access-Control-Allow-Methods': 'GET, PUT, DELETE, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+          'Access-Control-Allow-Origin': '*',
+        });
+        done();
+      });
+
       if (process.env.NODE_ENV !== 'production') {
         fastify.register(require('fastify-swagger'), {
           routePrefix: '/documentation',
