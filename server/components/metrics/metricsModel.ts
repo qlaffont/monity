@@ -14,6 +14,10 @@ const MetricSchema = new Schema({
     ref: 'Checker',
     required: true,
   },
+  date: {
+    type: Date,
+    default: (): number => Date.now(),
+  },
 });
 
 export default model('Metric', MetricSchema);
