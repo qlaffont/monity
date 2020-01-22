@@ -1,6 +1,6 @@
 import { forbidden, unauthorized } from '@hapi/boom';
 import jwt from 'jsonwebtoken';
-import { FastifyInstance, FastifyMiddleware } from 'fastify';
+import { FastifyInstance } from 'fastify';
 import { writeFileSync } from 'fs';
 
 import { HandlingBoom } from '../httpHandling/httpHandlingService';
@@ -28,18 +28,21 @@ export const checkTokenValidity = (token: string): string | Error => {
   return jwt.verify(token, process.env.AUTH_SECRET);
 };
 
-export const verifyAuth: FastifyMiddleware = (request, reply, done) => {
+export const verifyAuth = (fastify: FastifyInstance) => (request, reply, done): void => {
   let token;
 
   if (request.headers.authorization || request.headers.Authorization) {
     token = request.headers.authorization || request.headers.Authorization;
   }
 
-  if (token) {
+  // @ts-ignore
+  if (token && fastify.authToken && token === fastify.authToken) {
     try {
       checkTokenValidity(token);
       done();
     } catch (error) {
+      // @ts-ignore
+      fastify.authToken = false;
       HandlingBoom(forbidden('Token expired !'), reply);
       done();
     }
