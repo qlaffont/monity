@@ -2,8 +2,6 @@ import { Worker } from 'worker_threads';
 
 const pathWorker = __dirname + '/index.js';
 
-process.env.DEBUG_WORKER = 'true';
-
 describe('Worker', () => {
   describe('Mount Worker Instance', () => {
     it('should be a worker', () => {
@@ -41,24 +39,28 @@ describe('Worker', () => {
       worker.postMessage(data);
       worker.once('message', msg => {
         expect(typeof msg).toBe('object');
-        expect(msg).toEqual({
-          cmd: 'debug',
-          log: 'W CMD -> {"cmd":"init","type":"ping","address":"8.8.8.8","port":80,"cron":"0 0 0 0 *","id":"56"}',
-        });
-        done();
+        if (msg.cmd && msg.cmd === 'debug') {
+          expect(msg).toEqual({
+            cmd: 'debug',
+            log: 'W CMD -> {"cmd":"init","type":"ping","address":"8.8.8.8","port":80,"cron":"0 0 0 0 *","id":"56"}',
+          });
+          done();
+        }
       });
     });
 
     it('Stop Event is sent', done => {
       const data = { cmd: 'stop', type: 'ping', address: '8.8.8.8', port: 80, cron: '0 0 0 0 *', id: '56' };
       worker.postMessage(data);
-      worker.once('message', msg => {
+      worker.on('message', msg => {
         expect(typeof msg).toBe('object');
-        expect(msg).toEqual({
-          cmd: 'debug',
-          log: 'W CMD -> {"cmd":"stop","type":"ping","address":"8.8.8.8","port":80,"cron":"0 0 0 0 *","id":"56"}',
-        });
-        done();
+        if (msg.cmd && msg.cmd === 'debug') {
+          expect(msg).toEqual({
+            cmd: 'debug',
+            log: 'W CMD -> {"cmd":"stop","type":"ping","address":"8.8.8.8","port":80,"cron":"0 0 0 0 *","id":"56"}',
+          });
+          done();
+        }
       });
     });
   });
