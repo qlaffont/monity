@@ -8,19 +8,18 @@ import {
   generateAndSaveToken,
   checkTokenValidity,
   FastifyInstanceAuth,
+  verifyAuth,
 } from './authService';
 
 describe('Auth Service', () => {
-  const secretAuthKey = 'Thisismy@uthSecret190';
-  beforeAll(() => {
-    process.env = Object.assign(process.env, { AUTH_SECRET: secretAuthKey });
-  });
+  const expiredToken =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwa2ciOiJtb25pdHkiLCJpYXQiOjE1Nzk3ODMyNTYsImV4cCI6MTU3OTc4MzI1N30.5prVgOo4JJDrBuMWBgdctQeGphmi4eTlDsmDFRjBGVk';
 
   describe('generateToken', () => {
     it('should return a token when we called it', () => {
       const token = generateToken();
       expect(typeof token).toBe('string');
-      const jwtTokenContent = jwt.verify(token, secretAuthKey);
+      const jwtTokenContent = jwt.verify(token, 'monity-secret');
       expect(jwtTokenContent).toMatchObject({ pkg: 'monity' });
     });
 
@@ -37,7 +36,7 @@ describe('Auth Service', () => {
       );
       const token = generateToken();
 
-      const jwtTokenContent = jwt.verify(token, secretAuthKey);
+      const jwtTokenContent = jwt.verify(token, 'monity-secret');
 
       expect(timeTommorow).toEqual(jwtTokenContent.exp);
     });
@@ -86,17 +85,57 @@ describe('Auth Service', () => {
       expect(jwtTokenContent).toMatchObject({ pkg: 'monity' });
     });
 
-    it('should verify token validity', () => {
+    it('should verify token validity and return error if token is expired', () => {
       expect(() => {
-        const token =
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwa2ciOiJtb25pdHkiLCJpYXQiOjE1Nzk3MzAwOTIsImV4cCI6MTU3OTczMDA5M30.reVvf50A1nqFtpAn0bNw8ldNgE1NZ9E_mJO-F3iY96c';
-
-        checkTokenValidity(token);
+        checkTokenValidity(expiredToken);
       }).toThrow(new Error('jwt expired'));
     });
   });
 
   describe('verifyAuth', () => {
-    // TODO: Need to add Verify Auth Tests
+    let fastify: FastifyInstanceAuth, token, request, response, done;
+    beforeEach(() => {
+      fastify = Fastify({ logger: { level: 'error' } });
+      fastify.decorate('authToken', false);
+
+      token = generateAndSaveToken(fastify);
+      request = {
+        headers: {
+          Authorization: token,
+        },
+      };
+      response = {
+        status: jest.fn(() => ({ send: jest.fn() })),
+      };
+      done = jest.fn();
+    });
+
+    it("should return unauthorized when we don't provide token", () => {
+      request = { headers: {} };
+      verifyAuth(fastify)(request, response, done);
+
+      expect(done).toHaveBeenCalled();
+
+      expect(response.status).toHaveBeenCalled();
+      expect(response.status).toHaveBeenCalledWith(401);
+    });
+
+    it("should return forbidden when we don't provide an expired token", () => {
+      request = { headers: { Authorization: expiredToken } };
+      fastify.authToken = expiredToken;
+      verifyAuth(fastify)(request, response, done);
+
+      expect(done).toHaveBeenCalled();
+
+      expect(response.status).toHaveBeenCalled();
+      expect(response.status).toHaveBeenCalledWith(403);
+    });
+
+    it("should res nothing if everything it's good", () => {
+      verifyAuth(fastify)(request, response, done);
+
+      expect(done).toHaveBeenCalled();
+      expect(response.status).not.toHaveBeenCalled();
+    });
   });
 });
