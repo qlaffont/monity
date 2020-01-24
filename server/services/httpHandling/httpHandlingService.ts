@@ -7,7 +7,18 @@ interface BoomOptions {
   data?: object;
 }
 
-export const HandlingBoom = (obj: Boom<any>, res: FastifyReply<any>): void => {
+interface BoomMessage {
+  output: {
+    payload: {
+      message?: string;
+      data?: any;
+      statusCode: number;
+    };
+    statusCode: number;
+  };
+}
+
+export const HandlingBoom = (obj: Boom<any> | BoomMessage, res: FastifyReply<any>): void => {
   if (obj.output.payload.message === '') {
     delete obj.output.payload.message;
   }
@@ -20,10 +31,11 @@ export const ReturnFormError = (res: FastifyReply<any>): void => {
 };
 
 export const ReturnSuccess = (res: FastifyReply<any>, msg = 'Success', options: BoomOptions = {}): void => {
-  const boomMessage = new Boom(msg, {
-    statusCode: options.statusCode || 200,
-    data: options.data || {},
-  });
+  const statusCode = options.statusCode || 200;
+
+  const boomMessage: BoomMessage = {
+    output: { payload: { message: msg, statusCode: statusCode, data: options.data || {} }, statusCode },
+  };
 
   HandlingBoom(boomMessage, res);
 };
