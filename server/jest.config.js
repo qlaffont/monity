@@ -1,6 +1,6 @@
 module.exports = {
   displayName: 'SERVER',
-  moduleFileExtensions: ['ts', 'js'],
+  moduleFileExtensions: ['ts', 'js', 'json'],
   notify: true,
   transform: {
     '^.+\\.ts?$': 'ts-jest',
