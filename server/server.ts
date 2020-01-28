@@ -113,10 +113,6 @@ const runAppInTestMode = (): FastifyInstance => {
 
   RouteLoaderConfig(fastify, worker);
 
-  fastify.listen(port, err => {
-    if (err) throw err;
-  });
-
   return fastify;
 };
 

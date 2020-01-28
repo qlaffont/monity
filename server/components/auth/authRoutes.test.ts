@@ -12,6 +12,10 @@ describe('AuthRoutes', () => {
       });
     });
 
+    afterEach(done => {
+      fastify.close().then(() => done());
+    });
+
     it('should create a token', async () => {
       const res = await fastify.inject({
         method: 'GET',
