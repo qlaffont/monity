@@ -1,5 +1,6 @@
 import Fastify, { FastifyInstance } from 'fastify';
 import Next from 'next';
+import mongoose from 'mongoose';
 import { Worker } from 'worker_threads';
 
 import conf from '../next.config';
@@ -12,6 +13,13 @@ const worker = new Worker('./server/worker/index.js');
 
 const run = (): void => {
   const fastify = Fastify({ logger: { level: 'error' } });
+
+  mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true,
+  });
 
   fastify.register((fastify, _opts, next) => {
     const app = Next({ dev, conf: conf });
