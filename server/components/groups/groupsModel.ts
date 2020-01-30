@@ -1,8 +1,8 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
 
 const GroupSchema = new Schema({
   name: {
-    type: Number,
+    type: String,
     required: true,
   },
   description: {
@@ -11,3 +11,8 @@ const GroupSchema = new Schema({
 });
 
 export default model('Group', GroupSchema);
+
+export interface GroupType extends Document {
+  name: string;
+  description?: string;
+}
