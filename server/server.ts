@@ -5,6 +5,8 @@ import { Worker } from 'worker_threads';
 
 import conf from '../next.config';
 import RouteLoaderConfig from './config/routes';
+import { ReturnFormError, HandlingBoom } from './services/httpHandling/httpHandlingService';
+import { badImplementation } from '@hapi/boom';
 
 const port = parseInt(process.env.PORT || '3000', 10);
 const dev = process.env.NODE_ENV !== 'production';
@@ -46,6 +48,14 @@ const run = (): void => {
             'Access-Control-Allow-Origin': '*',
           });
           done();
+        });
+
+        fastify.setErrorHandler((err, _req, reply) => {
+          if (!err.validation) {
+            HandlingBoom(badImplementation(), reply);
+          } else {
+            ReturnFormError(reply);
+          }
         });
 
         if (process.env.NODE_ENV !== 'production') {
@@ -128,6 +138,14 @@ const runAppInTestMode = async (): Promise<FastifyInstance> => {
   fastify.decorate('authToken', false);
 
   fastify.register(require('fastify-formbody'));
+
+  fastify.setErrorHandler((err, _req, reply) => {
+    if (!err.validation) {
+      HandlingBoom(badImplementation(), reply);
+    } else {
+      ReturnFormError(reply);
+    }
+  });
 
   fastify.addHook('onRequest', (_request, reply, done) => {
     reply.headers({
