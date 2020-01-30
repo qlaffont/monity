@@ -3765,6 +3765,14 @@ fast-safe-stringify@^2.0.7:
   resolved "https://registry.yarnpkg.com/fast-safe-stringify/-/fast-safe-stringify-2.0.7.tgz#124aa885899261f68aedb42a7c080de9da608743"
   integrity sha512-Utm6CdzT+6xsDk2m8S6uL8VHxNwI6Jub+e9NYTcAms28T84pTa25GJQV9j0CY0N1rM8hK4x6grpF2BQf+2qwVA==
 
+fastify-formbody@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/fastify-formbody/-/fastify-formbody-3.1.0.tgz#604cdafdb9e3af6068e6d9940985baf692d6e922"
+  integrity sha512-GQQtRmI8w07SMcnXiWrk9H8GAMJwheKAkQS4q0FbJ56Qu8bV39GOffiZ8GLHQmvcJ2B65S+4IAtNjsG6vtMEig==
+  dependencies:
+    fastify-plugin "^1.0.0"
+    qs "^6.5.1"
+
 fastify-helmet@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/fastify-helmet/-/fastify-helmet-3.0.2.tgz#18513ad01535e3ea729c527a8d101f3edf03a800"
@@ -3786,7 +3794,7 @@ fastify-helmet@^3.0.2:
     referrer-policy "^1.1.0"
     x-xss-protection "^1.1.0"
 
-fastify-plugin@^1.2.1, fastify-plugin@^1.6.0:
+fastify-plugin@^1.0.0, fastify-plugin@^1.2.1, fastify-plugin@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/fastify-plugin/-/fastify-plugin-1.6.0.tgz#c8198b08608f20c502b5dad26b36e9ae27206d7c"
   integrity sha512-lFa9txg8LZx4tljj33oG53nUXhVg0baZxtP9Pxi0dJmI0NQxzkDk5DS9kr3D7iMalUAp3mvIq16OQumc7eIvLA==
@@ -7754,6 +7762,11 @@ punycode@^2.1.0, punycode@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
+
+qs@^6.5.1:
+  version "6.9.1"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.9.1.tgz#20082c65cb78223635ab1a9eaca8875a29bf8ec9"
+  integrity sha512-Cxm7/SS/y/Z3MHWSxXb8lIFqgqBowP5JMlTUFyJN88y0SGQhVmZnqFK/PeuMX9LzUyWsqqhNxIyg0jlzq946yA==
 
 qs@~6.5.2:
   version "6.5.2"

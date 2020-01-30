@@ -37,6 +37,8 @@ const run = (): void => {
 
         fastify.decorate('authToken', false);
 
+        fastify.register(require('fastify-formbody'));
+
         fastify.addHook('onRequest', (_request, reply, done) => {
           reply.headers({
             'Access-Control-Allow-Methods': 'GET, PUT, DELETE, POST, OPTIONS',
@@ -124,6 +126,8 @@ const runAppInTestMode = async (): Promise<FastifyInstance> => {
   }
 
   fastify.decorate('authToken', false);
+
+  fastify.register(require('fastify-formbody'));
 
   fastify.addHook('onRequest', (_request, reply, done) => {
     reply.headers({
