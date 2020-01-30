@@ -6,4 +6,7 @@ module.exports = {
     '^.+\\.ts?$': 'ts-jest',
     '^.+\\.js?$': 'ts-jest',
   },
+  testEnvironment: 'node',
+  globalSetup: './jest/cleanDB.js',
+  globalTeardown: './jest/cleanDB.js',
 };

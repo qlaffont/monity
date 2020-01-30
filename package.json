@@ -8,7 +8,8 @@
     "lint": "npm run lint:srv",
     "lint:srv": "npx eslint server --ext .ts",
     "test": "npm run test:srv",
-    "test:srv": "NODE_ENV=test DEBUG_WORKER=true npx jest --config=server/jest.config.js"
+    "test:srv": "npx jest --config=server/jest.config.js --forceExit",
+    "test:srv-watch": "npx jest --watch --config=server/jest.config.js"
   },
   "husky": {
     "hooks": {

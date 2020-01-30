@@ -4,8 +4,8 @@ describe('AuthRoutes', () => {
   let fastify;
 
   describe('GET /auth/generate', () => {
-    beforeEach(done => {
-      fastify = app();
+    beforeEach(async done => {
+      fastify = await app();
 
       fastify.ready(() => {
         done();

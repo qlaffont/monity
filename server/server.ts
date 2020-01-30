@@ -97,14 +97,31 @@ const run = (): void => {
       .catch(err => next(err));
   });
 
+  fastify.addHook('onClose', async (_instance, done) => {
+    await worker.terminate();
+    process.exit();
+    done();
+  });
+
   fastify.listen(port, err => {
     if (err) throw err;
     console.log(`> Ready on http://localhost:${port}`);
   });
 };
 
-const runAppInTestMode = (): FastifyInstance => {
+const runAppInTestMode = async (): Promise<FastifyInstance> => {
   const fastify = Fastify();
+
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
+      useUnifiedTopology: true,
+    });
+  } catch (error) {
+    process.exit();
+  }
 
   fastify.decorate('authToken', false);
 
@@ -120,6 +137,12 @@ const runAppInTestMode = (): FastifyInstance => {
   fastify.register(require('fastify-helmet'));
 
   RouteLoaderConfig(fastify, worker);
+
+  // @ts-ignore
+  fastify.addHook('onClose', async (_instance, done) => {
+    await worker.terminate();
+    done();
+  });
 
   return fastify;
 };
