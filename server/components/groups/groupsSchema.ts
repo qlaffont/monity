@@ -43,17 +43,14 @@ export const postGroup = {
 export const putGroup = {
   tags: ['Group'],
   description: 'Edit Group',
-  ...bodyParams(
-    {
-      name: {
-        type: 'string',
-      },
-      description: {
-        type: 'string',
-      },
+  ...bodyParams({
+    name: {
+      type: 'string',
     },
-    ['name'],
-  ),
+    description: {
+      type: 'string',
+    },
+  }),
   ...urlParams({
     groupId: {
       type: 'string',

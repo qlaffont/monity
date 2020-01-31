@@ -77,8 +77,10 @@ const start = data => {
  * @param {*} data (address, port, type, id)
  */
 const stop = data => {
-  crons[data.id].stop();
-  delete crons[data.id];
+  if (crons[data.id]) {
+    crons[data.id].stop();
+    delete crons[data.id];
+  }
 };
 
 /**

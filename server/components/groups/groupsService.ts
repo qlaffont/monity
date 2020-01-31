@@ -1,4 +1,5 @@
 import Group, { GroupType } from './groupsModel';
+import { CheckersService } from '../checkers/checkersService';
 
 export class GroupsService {
   public static async addGroup(name: string, description: string): Promise<GroupType | Error> {
@@ -28,7 +29,7 @@ export class GroupsService {
 
     if (!group) throw new Error('Group Not Found');
 
-    // TODO: Delete/Stop all checkers + Delete all metrics
+    await CheckersService.deleteAllByGroupId(id);
 
     await Group.findByIdAndDelete(id);
 
