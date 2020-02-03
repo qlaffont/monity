@@ -61,11 +61,15 @@ export class CheckersService {
   }
 
   public static async getCheckers(): Promise<CheckerType[]> {
-    return await Checker.find();
+    return await Checker.find()
+      .populate('groupId')
+      .exec();
   }
 
   public static async getCheckerById(id: string): Promise<CheckerType[]> {
-    return await Checker.findById(id);
+    return await Checker.findById(id)
+      .populate('groupId')
+      .exec();
   }
 
   public static async startChecker(_id: string, worker): Promise<string> {

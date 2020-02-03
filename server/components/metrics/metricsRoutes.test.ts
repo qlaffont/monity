@@ -210,7 +210,9 @@ describe('MetricsRoutes', () => {
 
       const d = JSON.parse(res.body).data;
       expect(typeof d).toEqual('object');
-      expect(d).toEqual(data);
+      const expectedResult = { ...data };
+      delete expectedResult.checkerId;
+      expect(d).toMatchObject(expectedResult);
     });
 
     it('should return not found if not good id', async () => {

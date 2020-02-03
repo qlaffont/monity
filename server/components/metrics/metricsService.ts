@@ -25,7 +25,9 @@ export class MetricsService {
   }
 
   public static async getMetrics(): Promise<MetricType[]> {
-    return await Metric.find();
+    return await Metric.find()
+      .populate('checkerId')
+      .exec();
   }
 
   public static async getMetricsByCheckerId(checkerId: string): Promise<MetricType[]> {
@@ -33,11 +35,15 @@ export class MetricsService {
 
     if (!checker) throw new Error('Checker Not Found');
 
-    return await Metric.find({ checkerId });
+    return await Metric.find({ checkerId })
+      .populate('checkerId')
+      .exec();
   }
 
   public static async getMetricById(id: string): Promise<MetricType[]> {
-    return await Metric.findById(id);
+    return await Metric.findById(id)
+      .populate('checkerId')
+      .exec();
   }
 
   public static async deleteAllByCheckerId(checkerId: string): Promise<Error | number> {
