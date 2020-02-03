@@ -1,8 +1,8 @@
 import app from '../../server';
 import { authHeaders } from '../../jest/fastifyHeaders';
 
-describe('GroupsRoutes', () => {
-  let fastify, token;
+describe('MetricsRoutes', () => {
+  let fastify, token, group, checker;
 
   beforeAll(async done => {
     fastify = await app();
@@ -15,7 +15,37 @@ describe('GroupsRoutes', () => {
         })
         .then(res => {
           token = JSON.parse(res.body).data.token;
-          done();
+
+          fastify
+            .inject({
+              method: 'POST',
+              url: '/groups',
+              ...authHeaders(token),
+              body: {
+                name: 'My Group',
+              },
+            })
+            .then(resGrp => {
+              group = JSON.parse(resGrp.body).data;
+              fastify
+                .inject({
+                  method: 'POST',
+                  url: '/checkers',
+                  ...authHeaders(token),
+                  body: {
+                    name: 'My Checker',
+                    checkerType: 'ping',
+                    address: '127.0.0.1',
+                    port: '80',
+                    cron: '* * * * *',
+                    groupId: group._id,
+                  },
+                })
+                .then(resChecker => {
+                  checker = JSON.parse(resChecker.body).data;
+                  done();
+                });
+            });
         });
     });
   });
@@ -24,87 +54,48 @@ describe('GroupsRoutes', () => {
     fastify.close().then(() => done());
   });
 
-  describe('POST /groups', () => {
-    it('should create a group with name and description', async () => {
-      const res = await fastify.inject({
-        method: 'POST',
-        url: '/groups',
-        ...authHeaders(token),
-        body: {
-          name: 'My Group',
-          description: 'With My Description',
-        },
-      });
-
-      expect(res.statusCode).toEqual(200);
-      expect(JSON.parse(res.body)).toMatchObject({ message: 'Group successfully created !' });
-    });
-
-    it('should create a group with name and without description', async () => {
-      const res = await fastify.inject({
-        method: 'POST',
-        url: '/groups',
-        ...authHeaders(token),
-        body: {
-          name: 'My Group',
-        },
-      });
-
-      expect(res.statusCode).toEqual(200);
-      expect(JSON.parse(res.body)).toMatchObject({ message: 'Group successfully created !' });
-    });
-
-    it("should return an error if we don't provide name", async () => {
-      const res = await fastify.inject({
-        method: 'POST',
-        url: '/groups',
-        ...authHeaders(token),
-        body: {},
-      });
-
-      expect(res.statusCode).toEqual(400);
-      expect(JSON.parse(res.body)).toMatchObject({ message: 'Form Error' });
-    });
-  });
-
-  describe('PUT /groups', () => {
-    let id;
-    beforeAll(async done => {
-      const res = await fastify.inject({
-        method: 'POST',
-        url: '/groups',
-        ...authHeaders(token),
-        body: {
-          name: 'My Group',
-          description: 'With My Description',
-        },
-      });
-      id = JSON.parse(res.body).data._id;
-      done();
-    });
-
-    it('should update a group with name and a good id', async () => {
+  describe('POST /metrics', () => {
+    it('should create a metric with data and a good checker Id', async () => {
       const data = {
-        name: 'My Group edited',
+        ms: 2,
+        statusCode: 200,
+        checkerId: checker._id,
       };
 
       const res = await fastify.inject({
-        method: 'PUT',
-        url: `/groups/${id}`,
+        method: 'POST',
+        url: '/metrics',
+        ...authHeaders(token),
         body: data,
-        ...authHeaders(token),
       });
 
       expect(res.statusCode).toEqual(200);
-      expect(JSON.parse(res.body)).toMatchObject({ message: 'Group successfully edited !', data });
+      expect(JSON.parse(res.body)).toMatchObject({ message: 'Metric successfully created !' });
     });
 
-    it('should return an error if id is not good', async () => {
+    it("should return an error if we don't send any data", async () => {
       const res = await fastify.inject({
-        method: 'PUT',
-        url: `/groups/wrongid`,
+        method: 'POST',
+        url: '/metrics',
+        ...authHeaders(token),
         body: {},
+      });
+
+      expect(res.statusCode).toEqual(400);
+      expect(JSON.parse(res.body)).toMatchObject({ message: 'Form Error' });
+    });
+
+    it('should return an error if we provide a wrong groupId', async () => {
+      const data = {
+        ms: 2,
+        statusCode: 200,
+        checkerId: 'totlotlo',
+      };
+      const res = await fastify.inject({
+        method: 'POST',
+        url: '/metrics',
         ...authHeaders(token),
+        body: data,
       });
 
       expect(res.statusCode).toEqual(400);
@@ -112,37 +103,40 @@ describe('GroupsRoutes', () => {
     });
   });
 
-  describe('DELETE /groups', () => {
+  describe('DELETE /metrics', () => {
     let id;
     beforeAll(async done => {
+      const data = {
+        ms: 2,
+        statusCode: 200,
+        checkerId: checker._id,
+      };
+
       const res = await fastify.inject({
         method: 'POST',
-        url: '/groups',
+        url: '/metrics',
         ...authHeaders(token),
-        body: {
-          name: 'My Group',
-          description: 'With My Description',
-        },
+        body: data,
       });
       id = JSON.parse(res.body).data._id;
       done();
     });
 
-    it('should delete a group with good id', async () => {
+    it('should delete a metric with good id', async () => {
       const res = await fastify.inject({
         method: 'DELETE',
-        url: `/groups/${id}`,
+        url: `/metrics/${id}`,
         ...authHeaders(token),
       });
 
       expect(res.statusCode).toEqual(200);
-      expect(JSON.parse(res.body)).toMatchObject({ message: 'Group successfully deleted !' });
+      expect(JSON.parse(res.body)).toMatchObject({ message: 'Metric successfully deleted !' });
     });
 
     it('should return an error if id is not good', async () => {
       const res = await fastify.inject({
         method: 'DELETE',
-        url: `/groups/azeazeae`,
+        url: `/metrics/azeazeae`,
         ...authHeaders(token),
       });
 
@@ -151,26 +145,29 @@ describe('GroupsRoutes', () => {
     });
   });
 
-  describe('GET /groups', () => {
+  describe('GET /metrics', () => {
     let id;
     beforeAll(async done => {
+      const data = {
+        ms: 2,
+        statusCode: 200,
+        checkerId: checker._id,
+      };
+
       const res = await fastify.inject({
         method: 'POST',
-        url: '/groups',
+        url: '/metrics',
         ...authHeaders(token),
-        body: {
-          name: 'My Group',
-          description: 'With My Description',
-        },
+        body: data,
       });
       id = JSON.parse(res.body).data._id;
       done();
     });
 
-    it('should return an array with all groups', async () => {
+    it('should return an array with all metrics', async () => {
       const res = await fastify.inject({
         method: 'GET',
-        url: `/groups`,
+        url: `/metrics`,
         ...authHeaders(token),
       });
       expect(res.statusCode).toEqual(200);
@@ -183,26 +180,29 @@ describe('GroupsRoutes', () => {
     });
   });
 
-  describe('GET /groups/:id', () => {
+  describe('GET /metrics/:id', () => {
     let data;
     beforeAll(async done => {
+      const dataSample = {
+        ms: 2,
+        statusCode: 200,
+        checkerId: checker._id,
+      };
+
       const res = await fastify.inject({
         method: 'POST',
-        url: '/groups',
+        url: '/metrics',
         ...authHeaders(token),
-        body: {
-          name: 'My Group',
-          description: 'With My Description',
-        },
+        body: dataSample,
       });
       data = JSON.parse(res.body).data;
       done();
     });
 
-    it('should return group info if good id', async () => {
+    it('should return metric info if good id', async () => {
       const res = await fastify.inject({
         method: 'GET',
-        url: `/groups/${data._id}`,
+        url: `/metrics/${data._id}`,
         ...authHeaders(token),
       });
 
@@ -216,7 +216,7 @@ describe('GroupsRoutes', () => {
     it('should return not found if not good id', async () => {
       const res = await fastify.inject({
         method: 'GET',
-        url: `/groups/azeazeae`,
+        url: `/metrics/azeazeae`,
         ...authHeaders(token),
       });
 

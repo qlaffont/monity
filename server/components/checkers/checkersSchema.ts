@@ -1,3 +1,4 @@
+import { metricData } from './../metrics/metricsSchema';
 import { successSchema, successSchemaArray } from './../../schemas/success';
 import formErrorSchema from '../../schemas/formError';
 import apiSecurity from '../../schemas/apiSecurity';
@@ -152,6 +153,24 @@ export const stopChecker = {
   }),
   response: {
     ...successSchema('Checker Stopped'),
+    ...notFound('Checker not found'),
+  },
+  ...apiSecurity,
+};
+
+export const getMetricsByCheckerId = {
+  tags: ['Checker', 'Metric'],
+  description: 'Get Metrics by Checker Id',
+  ...urlParams({
+    checkerId: {
+      type: 'string',
+    },
+  }),
+  response: {
+    ...successSchemaArray(undefined, {
+      type: 'object',
+      properties: metricData,
+    }),
     ...notFound('Checker not found'),
   },
   ...apiSecurity,

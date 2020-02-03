@@ -121,7 +121,7 @@ describe('CheckersRoutes', () => {
       expect(JSON.parse(res.body)).toMatchObject({ message: 'Form Error' });
     });
 
-    it("should return an error if we don't any data", async () => {
+    it("should return an error if we don't send any data", async () => {
       const res = await fastify.inject({
         method: 'POST',
         url: '/checkers',
@@ -328,10 +328,74 @@ describe('CheckersRoutes', () => {
       expect(d).toEqual(data);
     });
 
-    it('should return notfound if not good id', async () => {
+    it('should return not found if not good id', async () => {
       const res = await fastify.inject({
         method: 'GET',
         url: `/checkers/azeazeae`,
+        ...authHeaders(token),
+      });
+
+      expect(res.statusCode).toEqual(404);
+    });
+  });
+
+  describe('GET /checkers/:id/metrics', () => {
+    let data, metric;
+    beforeAll(async done => {
+      const dataSample = {
+        name: 'My Checker',
+        checkerType: 'ping',
+        address: '127.0.0.1',
+        port: '80',
+        cron: '* * * * *',
+        groupId: group._id,
+      };
+
+      const res = await fastify.inject({
+        method: 'POST',
+        url: '/checkers',
+        ...authHeaders(token),
+        body: dataSample,
+      });
+      data = JSON.parse(res.body).data;
+
+      const metricSample = {
+        ms: 2,
+        statusCode: 200,
+        checkerId: data._id,
+      };
+
+      const resMetric = await fastify.inject({
+        method: 'POST',
+        url: '/metrics',
+        body: metricSample,
+        ...authHeaders(token),
+      });
+      metric = JSON.parse(resMetric.body).data;
+
+      done();
+    });
+
+    it('should return metrics if good id', async () => {
+      const res = await fastify.inject({
+        method: 'GET',
+        url: `/checkers/${data._id}/metrics`,
+        ...authHeaders(token),
+      });
+
+      expect(res.statusCode).toEqual(200);
+
+      const d = JSON.parse(res.body).data;
+      expect(Array.isArray(d)).toEqual(true);
+
+      const item = d.find(e => e._id === metric._id);
+      expect(item).toBeDefined();
+    });
+
+    it('should return not found if not good id', async () => {
+      const res = await fastify.inject({
+        method: 'GET',
+        url: `/checkers/azeazeae/metrics`,
         ...authHeaders(token),
       });
 

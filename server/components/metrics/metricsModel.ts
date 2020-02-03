@@ -14,10 +14,23 @@ const MetricSchema = new Schema({
     ref: 'Checker',
     required: true,
   },
-  date: {
+  metricsDate: {
     type: Date,
     default: (): number => Date.now(),
   },
 });
 
 export default model('Metric', MetricSchema);
+
+export interface MetricType extends Document {
+  ms: number;
+  statusCode: number;
+  checkerId: string;
+  metricsDate: Date;
+}
+
+export interface MetricAddDataType {
+  ms: number;
+  statusCode: number;
+  checkerId: string;
+}

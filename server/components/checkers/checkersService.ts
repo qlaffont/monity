@@ -1,3 +1,4 @@
+import { MetricsService } from './../metrics/metricsService';
 import Checker, { CheckerType, CheckerAddDataType, CheckerEditDataType } from './checkersModel';
 import Group from '../groups/groupsModel';
 
@@ -52,7 +53,7 @@ export class CheckersService {
     if (!checker) throw new Error('Checker Not Found');
 
     worker.postMessage({ cmd: 'stop', id: checker._id });
-    // TODO: Delete all metrics
+    await MetricsService.deleteAllByCheckerId(checker.id);
 
     await Checker.findByIdAndDelete(id);
 
@@ -114,8 +115,7 @@ export class CheckersService {
       let deletedCount = 0;
 
       checkers.map(async checker => {
-        // TODO: Remove Metrics
-
+        await MetricsService.deleteAllByCheckerId(checker.id);
         await Checker.findByIdAndDelete(checker.id);
         deletedCount++;
       });
