@@ -68,7 +68,7 @@ export class CheckersService {
   }
 
   public static async startChecker(_id: string, worker): Promise<string> {
-    const { address, port, checkerType, cron, id } = await Checker.findById(_id);
+    const { address, port, checkerType, cron, _id: id } = await Checker.findById(_id);
 
     if (!id) throw new Error('Checker Not Found');
 
@@ -88,7 +88,7 @@ export class CheckersService {
   }
 
   public static async stopChecker(_id: string, worker): Promise<string> {
-    const { id } = await Checker.findById(_id);
+    const { _id: id } = await Checker.findById(_id);
 
     if (!id) throw new Error('Checker Not Found');
 

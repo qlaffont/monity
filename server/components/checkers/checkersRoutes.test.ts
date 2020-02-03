@@ -338,4 +338,99 @@ describe('CheckersRoutes', () => {
       expect(res.statusCode).toEqual(404);
     });
   });
+
+  describe('PUT /checkers/:id/start', () => {
+    let id;
+    beforeAll(async done => {
+      const data = {
+        name: 'My Checker',
+        checkerType: 'ping',
+        address: '127.0.0.1',
+        port: '80',
+        cron: '* * * * *',
+        groupId: group._id,
+      };
+
+      const res = await fastify.inject({
+        method: 'POST',
+        url: '/checkers',
+        ...authHeaders(token),
+        body: data,
+      });
+      id = JSON.parse(res.body).data._id;
+      done();
+    });
+
+    it('should start with a good id', async () => {
+      const res = await fastify.inject({
+        method: 'PUT',
+        url: `/checkers/${id}/start`,
+        ...authHeaders(token),
+      });
+
+      expect(res.statusCode).toEqual(200);
+      expect(JSON.parse(res.body)).toMatchObject({ message: 'Checker Started' });
+    });
+
+    it('should return an error if id is not good', async () => {
+      const data = {
+        name: 'My Checker edited',
+      };
+
+      const res = await fastify.inject({
+        method: 'PUT',
+        url: `/checkers/wrongid/start`,
+        body: data,
+        ...authHeaders(token),
+      });
+
+      expect(res.statusCode).toEqual(404);
+      expect(JSON.parse(res.body)).toMatchObject({ message: 'Checker not found' });
+    });
+  });
+
+  describe('PUT /checkers/:id/stop', () => {
+    let id;
+    beforeAll(async done => {
+      const data = {
+        name: 'My Checker',
+        checkerType: 'ping',
+        address: '127.0.0.1',
+        port: '80',
+        cron: '* * * * *',
+        groupId: group._id,
+      };
+
+      const res = await fastify.inject({
+        method: 'POST',
+        url: '/checkers',
+        ...authHeaders(token),
+        body: data,
+      });
+      id = JSON.parse(res.body).data._id;
+      done();
+    });
+
+    it('should stop with a good id', async () => {
+      const res = await fastify.inject({
+        method: 'PUT',
+        url: `/checkers/${id}/stop`,
+        ...authHeaders(token),
+      });
+
+      expect(res.statusCode).toEqual(200);
+      expect(JSON.parse(res.body)).toMatchObject({ message: 'Checker Stopped' });
+    });
+
+    it('should return an error if id is not good', async () => {
+      const res = await fastify.inject({
+        method: 'PUT',
+        url: `/checkers/wrongid/stop`,
+        ...authHeaders(token),
+      });
+
+      expect(res.statusCode).toEqual(404);
+      expect(JSON.parse(res.body)).toMatchObject({ message: 'Checker not found' });
+    });
+  });
 });
