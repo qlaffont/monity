@@ -4,6 +4,7 @@ import apiSecurity from '../../schemas/apiSecurity';
 import bodyParams from '../../schemas/bodyParams';
 import urlParams from '../../schemas/urlParams';
 import notFound from '../../schemas/notFoundError';
+import unauthorizeSchema from '../../schemas/unauthorize';
 
 const groupData = {
   name: {
@@ -36,6 +37,7 @@ export const postGroup = {
   response: {
     ...successSchema('Group successfully created !', groupData),
     ...formErrorSchema(),
+    ...unauthorizeSchema(),
   },
   ...apiSecurity,
 };
@@ -59,6 +61,7 @@ export const putGroup = {
   response: {
     ...successSchema('Group successfully updated !', groupData),
     ...formErrorSchema(),
+    ...unauthorizeSchema(),
   },
   ...apiSecurity,
 };
@@ -74,6 +77,7 @@ export const deleteGroup = {
   response: {
     ...successSchema('Group successfully deleted !'),
     ...formErrorSchema(),
+    ...unauthorizeSchema(),
   },
   ...apiSecurity,
 };
@@ -87,6 +91,7 @@ export const getGroups = {
       properties: groupData,
     }),
     ...notFound('Groups not found'),
+    ...unauthorizeSchema(),
   },
   ...apiSecurity,
 };
@@ -102,6 +107,7 @@ export const getGroup = {
   response: {
     ...successSchema(undefined, groupData),
     ...notFound('Group not found'),
+    ...unauthorizeSchema(),
   },
   ...apiSecurity,
 };

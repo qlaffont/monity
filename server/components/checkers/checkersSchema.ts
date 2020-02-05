@@ -6,6 +6,7 @@ import bodyParams from '../../schemas/bodyParams';
 import urlParams from '../../schemas/urlParams';
 import notFound from '../../schemas/notFoundError';
 import queryParams from '../../schemas/queryParams';
+import unauthorizeSchema from '../../schemas/unauthorize';
 
 const checkerData = {
   name: {
@@ -66,6 +67,7 @@ export const postChecker = {
   response: {
     ...successSchema('Checker successfully created !', checkerData),
     ...formErrorSchema(),
+    ...unauthorizeSchema(),
   },
   ...apiSecurity,
 };
@@ -82,6 +84,7 @@ export const putChecker = {
   response: {
     ...successSchema('Checker successfully updated !', checkerData),
     ...formErrorSchema(),
+    ...unauthorizeSchema(),
   },
   ...apiSecurity,
 };
@@ -97,6 +100,7 @@ export const deleteChecker = {
   response: {
     ...successSchema('Checker successfully deleted !'),
     ...formErrorSchema(),
+    ...unauthorizeSchema(),
   },
   ...apiSecurity,
 };
@@ -110,6 +114,7 @@ export const getCheckers = {
       properties: checkerData,
     }),
     ...notFound('Checkers not found'),
+    ...unauthorizeSchema(),
   },
   ...apiSecurity,
 };
@@ -125,6 +130,7 @@ export const getChecker = {
   response: {
     ...successSchema(undefined, checkerData),
     ...notFound('Checker not found'),
+    ...unauthorizeSchema(),
   },
   ...apiSecurity,
 };
@@ -140,6 +146,7 @@ export const startChecker = {
   response: {
     ...successSchema('Checker Started'),
     ...notFound('Checker not found'),
+    ...unauthorizeSchema(),
   },
   ...apiSecurity,
 };
@@ -155,6 +162,7 @@ export const stopChecker = {
   response: {
     ...successSchema('Checker Stopped'),
     ...notFound('Checker not found'),
+    ...unauthorizeSchema(),
   },
   ...apiSecurity,
 };
@@ -173,6 +181,7 @@ export const getMetricsByCheckerId = {
       properties: metricData,
     }),
     ...notFound('Checker not found'),
+    ...unauthorizeSchema(),
   },
   ...apiSecurity,
 };
@@ -235,6 +244,7 @@ export const getExportMetricsByCheckerId = {
       },
     }),
     ...notFound('Checker not found'),
+    ...unauthorizeSchema(),
   },
   ...apiSecurity,
 };

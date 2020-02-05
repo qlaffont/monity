@@ -4,6 +4,7 @@ import apiSecurity from '../../schemas/apiSecurity';
 import bodyParams from '../../schemas/bodyParams';
 import urlParams from '../../schemas/urlParams';
 import notFound from '../../schemas/notFoundError';
+import unauthorizeSchema from '../../schemas/unauthorize';
 
 export const metricData = {
   ms: {
@@ -39,6 +40,7 @@ export const postMetric = {
   response: {
     ...successSchema('Metric successfully created !', metricData),
     ...formErrorSchema(),
+    ...unauthorizeSchema(),
   },
   ...apiSecurity,
 };
@@ -54,6 +56,7 @@ export const deleteMetric = {
   response: {
     ...successSchema('Metric successfully deleted !'),
     ...formErrorSchema(),
+    ...unauthorizeSchema(),
   },
   ...apiSecurity,
 };
@@ -67,6 +70,7 @@ export const getMetrics = {
       properties: metricData,
     }),
     ...notFound('Metrics not found'),
+    ...unauthorizeSchema(),
   },
   ...apiSecurity,
 };
@@ -82,6 +86,7 @@ export const getMetric = {
   response: {
     ...successSchema(undefined, metricData),
     ...notFound('Metric not found'),
+    ...unauthorizeSchema(),
   },
   ...apiSecurity,
 };
