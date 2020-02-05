@@ -5,6 +5,7 @@ import apiSecurity from '../../schemas/apiSecurity';
 import bodyParams from '../../schemas/bodyParams';
 import urlParams from '../../schemas/urlParams';
 import notFound from '../../schemas/notFoundError';
+import queryParams from '../../schemas/queryParams';
 
 const checkerData = {
   name: {
@@ -170,6 +171,68 @@ export const getMetricsByCheckerId = {
     ...successSchemaArray(undefined, {
       type: 'object',
       properties: metricData,
+    }),
+    ...notFound('Checker not found'),
+  },
+  ...apiSecurity,
+};
+
+export const getExportMetricsByCheckerId = {
+  tags: ['Checker', 'Metric'],
+  description: 'Export Metrics by Checker Id',
+  ...urlParams({
+    checkerId: {
+      type: 'string',
+    },
+  }),
+  ...queryParams({
+    field: {
+      type: 'string',
+      enum: ['ms', 'statusCode'],
+    },
+    filter: {
+      type: 'string',
+      enum: ['hour', 'day', 'week'],
+    },
+  }),
+  response: {
+    ...successSchema(undefined, {
+      keys: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
+      },
+      values: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
+      },
+      '2xx': {
+        type: 'array',
+        items: {
+          type: 'number',
+        },
+      },
+      '3xx': {
+        type: 'array',
+        items: {
+          type: 'number',
+        },
+      },
+      '4xx': {
+        type: 'array',
+        items: {
+          type: 'number',
+        },
+      },
+      '5xx': {
+        type: 'array',
+        items: {
+          type: 'number',
+        },
+      },
     }),
     ...notFound('Checker not found'),
   },

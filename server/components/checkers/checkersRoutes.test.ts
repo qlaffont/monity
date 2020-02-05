@@ -1,3 +1,4 @@
+import { getKeyFormat } from './../metrics/metricsTools';
 import app from '../../server';
 import { authHeaders } from '../../jest/fastifyHeaders';
 
@@ -392,6 +393,103 @@ describe('CheckersRoutes', () => {
 
       const item = d.find(e => e._id === metric._id);
       expect(item).toBeDefined();
+    });
+
+    it('should return not found if not good id', async () => {
+      const res = await fastify.inject({
+        method: 'GET',
+        url: `/checkers/azeazeae/metrics`,
+        ...authHeaders(token),
+      });
+
+      expect(res.statusCode).toEqual(404);
+    });
+  });
+
+  describe('GET /checkers/:id/metrics/export', () => {
+    let data, metric, metricSample;
+    beforeAll(async done => {
+      const dataSample = {
+        name: 'My Checker',
+        checkerType: 'ping',
+        address: '127.0.0.1',
+        port: '80',
+        cron: '* * * * *',
+        groupId: group._id,
+      };
+
+      const res = await fastify.inject({
+        method: 'POST',
+        url: '/checkers',
+        ...authHeaders(token),
+        body: dataSample,
+      });
+      data = JSON.parse(res.body).data;
+
+      metricSample = {
+        ms: 2,
+        statusCode: 200,
+        checkerId: data._id,
+      };
+
+      const resMetric = await fastify.inject({
+        method: 'POST',
+        url: '/metrics',
+        body: metricSample,
+        ...authHeaders(token),
+      });
+      metric = JSON.parse(resMetric.body).data;
+
+      done();
+    });
+
+    it('should return ms metrics if good id', async () => {
+      const res = await fastify.inject({
+        method: 'GET',
+        url: `/checkers/${data._id}/metrics/export`,
+        query: {
+          field: 'ms',
+          filter: 'hour',
+        },
+        ...authHeaders(token),
+      });
+
+      expect(res.statusCode).toEqual(200);
+
+      const d = JSON.parse(res.body).data;
+      expect(Array.isArray(d.keys)).toBe(true);
+      expect(Array.isArray(d.values)).toBe(true);
+      expect(d.keys.length).toBe(d.values.length);
+
+      expect(d.keys[0]).toBe(getKeyFormat(metric.metricsDate));
+      expect(d.values[0]).toBe(metricSample.ms.toString());
+    });
+
+    it('should return statusCode metrics if good id', async () => {
+      const res = await fastify.inject({
+        method: 'GET',
+        url: `/checkers/${data._id}/metrics/export`,
+        query: {
+          field: 'statusCode',
+          filter: 'hour',
+        },
+        ...authHeaders(token),
+      });
+
+      expect(res.statusCode).toEqual(200);
+
+      const d = JSON.parse(res.body).data;
+      expect(Array.isArray(d.keys)).toBe(true);
+      expect(Array.isArray(d.values)).toBe(true);
+      expect(d.keys.length).toBe(d.values.length);
+
+      expect(d.keys[0]).toBe(getKeyFormat(metric.metricsDate));
+      expect(d.values[0]).toBe(metricSample.statusCode.toString());
+
+      expect(d['2xx'][0]).toBe(1);
+      expect(d['3xx'][0]).toBe(0);
+      expect(d['4xx'][0]).toBe(0);
+      expect(d['5xx'][0]).toBe(0);
     });
 
     it('should return not found if not good id', async () => {

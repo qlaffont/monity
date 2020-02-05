@@ -15,7 +15,7 @@ const MetricSchema = new Schema({
     required: true,
   },
   metricsDate: {
-    type: Date,
+    type: Number,
     default: (): number => Date.now(),
   },
 });
@@ -26,7 +26,7 @@ export interface MetricType extends Document {
   ms: number;
   statusCode: number;
   checkerId: string;
-  metricsDate: Date;
+  metricsDate: number;
 }
 
 export interface MetricAddDataType {

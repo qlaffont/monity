@@ -7,6 +7,7 @@ import {
   startChecker,
   stopChecker,
   getMetricsByCheckerId,
+  getExportMetricsByCheckerId,
 } from './checkersSchema';
 
 import { CheckersController } from './checkersController';
@@ -37,5 +38,9 @@ export default (app, worker): void => {
 
   app.get('/checkers/:checkerId/metrics', { schema: getMetricsByCheckerId }, (req, res) =>
     CheckersMetricsController.getMetricsByCheckerId(req, res),
+  );
+
+  app.get('/checkers/:checkerId/metrics/export', { schema: getExportMetricsByCheckerId }, (req, res) =>
+    CheckersMetricsController.exportMetrics(req, res),
   );
 };

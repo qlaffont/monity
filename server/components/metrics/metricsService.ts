@@ -1,5 +1,23 @@
+import { exportMetrics, exportStatusCodeMetrics } from './metricsTools';
 import Metric, { MetricType, MetricAddDataType } from './metricsModel';
 import Checker from '../checkers/checkersModel';
+
+enum FilterEnum {
+  HOUR = 'hour',
+  DAY = 'day',
+  WEEK = 'week',
+}
+
+enum FieldEnum {
+  ms = 'ms',
+  statusCode = 'statusCode',
+}
+
+interface ExportMetricsOptions {
+  checkerId: string;
+  filter: FilterEnum;
+  field: FieldEnum;
+}
 
 export class MetricsService {
   public static async addMetric(options: MetricAddDataType): Promise<MetricType | Error> {
@@ -61,5 +79,36 @@ export class MetricsService {
     } catch (error) {
       throw 'Impossible to remove Metrics by Checker Id';
     }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public static async exportMetrics(options: ExportMetricsOptions): Promise<any> {
+    const checker = await Checker.findById(options.checkerId);
+
+    if (!checker) throw new Error('Checker Not Found');
+
+    const searchDate = new Date();
+
+    switch (options.filter) {
+      case 'day':
+        searchDate.setDate(searchDate.getDate() - 1);
+        break;
+      case 'week':
+        searchDate.setDate(searchDate.getDate() - 7);
+        break;
+      default:
+        searchDate.setHours(searchDate.getHours() - 1);
+        break;
+    }
+
+    const metrics = await Metric.find({ checkerId: options.checkerId, metricsDate: { $gt: searchDate.getTime() } });
+
+    let metricsObject = exportMetrics(metrics, options.filter, options.field);
+
+    if (options.field === 'statusCode') {
+      metricsObject = exportStatusCodeMetrics(metricsObject);
+    }
+
+    return metricsObject;
   }
 }
