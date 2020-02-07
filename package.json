@@ -5,8 +5,9 @@
     "dev": "ts-node --project tsconfig.server.json server/server.ts",
     "build": "next build && tsc --project tsconfig.server.json",
     "start": "NODE_ENV=production node ./dist/server/server.js",
-    "lint": "npm run lint:srv",
-    "lint:srv": "npx eslint server --ext .ts",
+    "lint": "npm run lint:srv && npm run lint:client",
+    "lint:srv": "cd server && npx eslint . --ext .ts && cd ..",
+    "lint:client": "npx eslint pages --ext .ts,.tsx && npx eslint components --ext .ts,.tsx",
     "test": "npm run test:srv",
     "test:srv": "npx jest --config=server/jest.config.js --forceExit",
     "test:srv-watch": "npx jest --watch --config=server/jest.config.js"
@@ -20,6 +21,8 @@
   "dependencies": {
     "@hapi/boom": "^9.0.0",
     "@zeit/next-sass": "^1.0.1",
+    "bulma": "^0.8.0",
+    "classnames": "^2.2.6",
     "cron": "^1.7.2",
     "fastify": "2.11.0",
     "fastify-formbody": "^3.1.0",
@@ -37,7 +40,7 @@
   "devDependencies": {
     "@types/jest": "^24.9.0",
     "@types/node": "^13.1.7",
-    "@types/react": "^16.9.17",
+    "@types/react": "^16.9.19",
     "@typescript-eslint/eslint-plugin": "^2.16.0",
     "@typescript-eslint/parser": "^2.16.0",
     "commitizen": "^4.0.3",
@@ -47,6 +50,8 @@
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.18.3",
+    "eslint-plugin-react-hooks": "^2.3.0",
     "husky": "^4.0.10",
     "jest": "^24.9.0",
     "prettier": "^1.19.1",

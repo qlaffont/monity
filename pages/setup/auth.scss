@@ -1,0 +1,25 @@
+.auth-page {
+  .notification a:not(.button):not(.dropdown-item) {
+    color: inherit;
+    text-decoration: inherit;
+  }
+
+  .tabs li.is-active a{
+    color: #3273dc !important;
+  }
+
+  .code-block {
+    padding: 0.3rem;
+    border: 1px solid grey;
+    background: whitesmoke;
+    word-break: break-word;
+    span {
+      font-size: 0.8rem;
+    }
+  }
+
+  .btn-copy {
+    margin-bottom: 0.5rem;
+  }
+
+}
