@@ -3,6 +3,7 @@ import React from 'react';
 import Head from 'next/head';
 
 import './app.scss';
+import AuthProvider from '../services/auth/authContext';
 
 const MyApp = (props): JSX.Element => {
   const { Component, pageProps } = props;
@@ -25,7 +26,9 @@ const MyApp = (props): JSX.Element => {
           crossOrigin="anonymous"
         />
       </Head>
-      <Component {...pageProps} />
+      <AuthProvider>
+        <Component {...pageProps} />
+      </AuthProvider>
     </>
   );
 };

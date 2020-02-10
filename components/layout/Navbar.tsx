@@ -1,7 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import Cookies from 'js-cookie';
+
+import { AuthContext } from '../../services/auth/authContext';
 
 const Navbar = (): JSX.Element => {
+  const ctx = React.useContext(AuthContext);
+  const [token, setToken] = useState(ctx?.auth.token);
+
+  const onChange = (event): void => {
+    setToken(event.target.value);
+  };
+
+  const onSubmit = (): void => {
+    ctx?.auth.setToken(token || '');
+    Cookies.set('monityToken', token, { expires: 1 });
+
+    if (token === '') {
+      Cookies.remove('monityToken');
+    }
+
+    alert('Token Set');
+  };
+
   return (
     <nav className="navbar is-info" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
@@ -41,10 +62,18 @@ const Navbar = (): JSX.Element => {
           <div className="navbar-item">
             <div className="field has-addons">
               <div className="control">
-                <input className="input" type="text" placeholder="Monity Token" />
+                <input
+                  className="input"
+                  type="text"
+                  placeholder="Monity Token"
+                  value={token}
+                  onChange={(e): void => onChange(e)}
+                />
               </div>
               <div className="control">
-                <a className="button is-primary">Connect</a>
+                <a className="button is-primary" onClick={(): void => onSubmit()}>
+                  Connect
+                </a>
               </div>
             </div>
           </div>
