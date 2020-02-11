@@ -115,7 +115,11 @@ const run = (): void => {
     done();
   });
 
-  fastify.listen(port, err => {
+  fastify.register(require('fastify-cors'), {
+    origin: false,
+  });
+
+  fastify.listen(port, '0.0.0.0', err => {
     if (err) throw err;
     console.log(`> Ready on http://localhost:${port}`);
   });

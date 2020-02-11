@@ -1,1 +1,38 @@
 @import '~bulma';
+
+@mixin mt-x {
+  @for $i from 1 to 5 {
+    .mt-#{$i} {
+      margin-top: #{$i}rem;
+    }
+  }
+}
+
+@mixin mb-x {
+  @for $i from 1 to 5 {
+    .mb-#{$i} {
+      margin-bottom: #{$i}rem;
+    }
+  }
+}
+
+@mixin ml-x {
+  @for $i from 1 to 5 {
+    .ml-#{$i} {
+      margin-left: #{$i}rem;
+    }
+  }
+}
+
+@mixin mr-x {
+  @for $i from 1 to 5 {
+    .mr-#{$i} {
+      margin-right: #{$i}rem;
+    }
+  }
+}
+
+@include mt-x;
+@include mb-x;
+@include ml-x;
+@include mr-x;

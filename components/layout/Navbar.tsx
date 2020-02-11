@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
+import cogoToast from 'cogo-toast';
 
 import { AuthContext } from '../../services/auth/authContext';
 
@@ -20,7 +21,7 @@ const Navbar = (): JSX.Element => {
       Cookies.remove('monityToken');
     }
 
-    alert('Token Set');
+    cogoToast.success('Token Set !', { heading: 'Success !' });
   };
 
   return (
@@ -50,7 +51,9 @@ const Navbar = (): JSX.Element => {
           <Link href="/setup">
             <a className="navbar-item">Home</a>
           </Link>
-          <a className="navbar-item">Groups</a>
+          <Link href="/setup/groups">
+            <a className="navbar-item">Groups</a>
+          </Link>
           <a className="navbar-item">Checkers</a>
           <a className="navbar-item">Metrics</a>
           <Link href="/setup/auth">
