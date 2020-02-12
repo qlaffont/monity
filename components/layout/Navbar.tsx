@@ -54,7 +54,9 @@ const Navbar = (): JSX.Element => {
           <Link href="/setup/groups">
             <a className="navbar-item">Groups</a>
           </Link>
-          <a className="navbar-item">Checkers</a>
+          <Link href="/setup/checkers">
+            <a className="navbar-item">Checkers</a>
+          </Link>
           <a className="navbar-item">Metrics</a>
           <Link href="/setup/auth">
             <a className="navbar-item">Get Monity Auth Token</a>
