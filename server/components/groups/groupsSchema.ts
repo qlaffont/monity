@@ -6,7 +6,7 @@ import urlParams from '../../schemas/urlParams';
 import notFound from '../../schemas/notFoundError';
 import unauthorizeSchema from '../../schemas/unauthorize';
 
-const groupData = {
+export const groupData = {
   name: {
     type: 'string',
   },

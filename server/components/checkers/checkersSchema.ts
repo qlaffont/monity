@@ -7,6 +7,7 @@ import urlParams from '../../schemas/urlParams';
 import notFound from '../../schemas/notFoundError';
 import queryParams from '../../schemas/queryParams';
 import unauthorizeSchema from '../../schemas/unauthorize';
+import { groupData } from '../groups/groupsSchema';
 
 const checkerData = {
   name: {
@@ -38,7 +39,8 @@ const checkerData = {
   },
 
   groupId: {
-    type: 'object',
+    type: ['object', 'string'],
+    properties: { ...groupData },
   },
 
   _id: {
@@ -49,7 +51,9 @@ const checkerData = {
 const checkerAddData = { ...checkerData };
 delete checkerAddData._id;
 delete checkerAddData.active;
+// @ts-ignore
 checkerAddData.groupId.type = 'string';
+delete checkerAddData.groupId.properties;
 
 const checkerEditData = {
   ...checkerData,

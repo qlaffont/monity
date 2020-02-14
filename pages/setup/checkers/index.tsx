@@ -55,7 +55,7 @@ const CheckersList = (): JSX.Element => {
                 return (
                   <tr key={checker._id}>
                     <td>{checker.name}</td>
-                    <td>{checker.group}</td>
+                    <td>{checker.groupId.name}</td>
                     <td>{checker.checkerType}</td>
                     <td>{checker.cron}</td>
                     <td>
