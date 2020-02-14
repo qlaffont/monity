@@ -12,13 +12,13 @@ import { useRouter } from 'next/router';
 
 const GroupFormComponent = ({ groupData }): JSX.Element => {
   const router = useRouter();
-  const LoginSchema = yup.object().shape({
+  const GroupFormSchema = yup.object().shape({
     name: yup.string().required(),
     description: yup.string(),
   });
 
   const { register, handleSubmit, errors, getValues, setValue } = useForm({
-    validationSchema: LoginSchema,
+    validationSchema: GroupFormSchema,
   });
 
   useEffect(() => {

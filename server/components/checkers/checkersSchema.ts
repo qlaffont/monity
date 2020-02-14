@@ -51,9 +51,6 @@ const checkerData = {
 const checkerAddData = { ...checkerData };
 delete checkerAddData._id;
 delete checkerAddData.active;
-// @ts-ignore
-checkerAddData.groupId.type = 'string';
-delete checkerAddData.groupId.properties;
 
 const checkerEditData = {
   ...checkerData,

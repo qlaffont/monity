@@ -36,3 +36,7 @@
 @include mb-x;
 @include ml-x;
 @include mr-x;
+
+input[disabled], select[disabled]{
+  border: 1px solid gray !important;
+}

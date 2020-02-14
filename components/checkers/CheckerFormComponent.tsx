@@ -13,22 +13,35 @@ import { getGroups } from '../../services/apis/groups';
 
 const CheckerFormComponent = ({ checkerData }): JSX.Element => {
   const router = useRouter();
-  const LoginSchema = yup.object().shape({
+  let disabled = false;
+  const CheckerFormSchema = yup.object().shape({
     name: yup.string().required(),
     description: yup.string(),
+    checkerType: yup
+      .string()
+      .matches(/(http|ping)/)
+      .required(),
+    address: yup.string().required(),
+    port: yup.number(),
+    cron: yup.string().required(),
+    groupId: yup.string().required(),
   });
 
   const { register, handleSubmit, errors, getValues, setValue, watch } = useForm({
-    validationSchema: LoginSchema,
+    validationSchema: CheckerFormSchema,
   });
 
-  const type = watch('type');
+  const type = watch('checkerType');
   const port = watch('port');
 
   useEffect(() => {
     if (checkerData) {
       Object.keys(checkerData).map(key => {
-        setValue(key, checkerData[key]);
+        let data = checkerData[key];
+        if (key === 'groupId') {
+          data = checkerData.groupId._id;
+        }
+        setValue(key, data);
       });
     }
   }, [checkerData]);
@@ -37,6 +50,7 @@ const CheckerFormComponent = ({ checkerData }): JSX.Element => {
 
   if (checkerData && checkerData._id) {
     axiosConfig = putChecker(checkerData._id);
+    disabled = true;
   }
 
   const [{ data, loading: isLoading, error }, execute] = useAxios(axiosConfig, {
@@ -86,7 +100,7 @@ const CheckerFormComponent = ({ checkerData }): JSX.Element => {
           <div className="field column">
             <label className="label input__label">Checker Type</label>
             <div className="control has-icons-right">
-              <select name="checkerType" className="input" ref={register}>
+              <select name="checkerType" className="input" ref={register} disabled={disabled}>
                 <option value="http">HTTP</option>
                 <option value="ping">Ping</option>
               </select>
@@ -102,18 +116,16 @@ const CheckerFormComponent = ({ checkerData }): JSX.Element => {
           </div>
         </div>
 
-        {type && type === 'ping' && (
-          <div className="columns">
-            <div className="field column">
-              <label className="label input__label">Port</label>
-              <div className="control has-icons-right">
-                <input type="text" name="port" className="input" ref={register} />
-                {type === 'ping' && !port && <span className="tag is-danger">Port is required</span>}
-              </div>
+        <div className="columns">
+          <div className="field column">
+            <label className="label input__label">Port</label>
+            <div className="control has-icons-right">
+              <input type="text" name="port" className="input" ref={register} />
+              {type === 'ping' && !port && <span className="tag is-danger">Port is required</span>}
             </div>
-            <div className="field column"></div>
           </div>
-        )}
+          <div className="field column"></div>
+        </div>
 
         <div className="columns">
           <div className="field column">
@@ -126,10 +138,12 @@ const CheckerFormComponent = ({ checkerData }): JSX.Element => {
           <div className="field column">
             <label className="label input__label">Group</label>
             <div className="control has-icons-right">
-              <select name="groupId" className="input" ref={register}>
-                <option disabled selected>
-                  Please choose a group
-                </option>
+              <select name="groupId" className="input" ref={register} defaultValue="" disabled={disabled}>
+                {!checkerData && (
+                  <option disabled value="">
+                    Please choose a group
+                  </option>
+                )}
                 {groups.map(group => (
                   <option value={group._id} key={group._id}>
                     {group.name}
@@ -154,6 +168,13 @@ CheckerFormComponent.propTypes = {
   checkerData: PropTypes.shape({
     name: PropTypes.string,
     description: PropTypes.string,
+    checkerType: PropTypes.string,
+    address: PropTypes.string,
+    port: PropTypes.number,
+    cron: PropTypes.string,
+    groupId: PropTypes.shape({
+      _id: PropTypes.string,
+    }),
     _id: PropTypes.string,
   }),
 };
