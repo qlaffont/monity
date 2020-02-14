@@ -116,12 +116,12 @@ const CheckerFormComponent = ({ checkerData }): JSX.Element => {
           </div>
         </div>
 
-        <div className="columns">
+        <div className={classNames('columns', { 'is-display-none': type && type !== 'ping' })}>
           <div className="field column">
             <label className="label input__label">Port</label>
             <div className="control has-icons-right">
               <input type="text" name="port" className="input" ref={register} />
-              {type === 'ping' && !port && <span className="tag is-danger">Port is required</span>}
+              {!port && <span className="tag is-danger">Port is required</span>}
             </div>
           </div>
           <div className="field column"></div>
