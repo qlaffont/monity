@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useEffect } from 'react';
 import * as yup from 'yup';
 import useAxios from 'axios-hooks';
@@ -10,6 +11,7 @@ import { postChecker, putChecker } from '../../services/apis/checkers';
 import { apiErrorInterceptor } from '../../services/auth/authService';
 import { useRouter } from 'next/router';
 import { getGroups } from '../../services/apis/groups';
+import { cronRegex, addressValidator } from '../../services/validator/checkerValidator';
 
 const CheckerFormComponent = ({ checkerData }): JSX.Element => {
   const router = useRouter();
@@ -22,8 +24,14 @@ const CheckerFormComponent = ({ checkerData }): JSX.Element => {
       .matches(/(http|ping)/)
       .required(),
     address: yup.string().required(),
-    port: yup.number(),
-    cron: yup.string().required(),
+    port: yup
+      .number()
+      .nullable()
+      .transform((value: string, originalValue: string) => (originalValue.trim() === '' ? null : value)),
+    cron: yup
+      .string()
+      .matches(cronRegex)
+      .required(),
     groupId: yup.string().required(),
   });
 
@@ -68,14 +76,27 @@ const CheckerFormComponent = ({ checkerData }): JSX.Element => {
 
   if (error) {
     apiErrorInterceptor(error, router);
-    // @ts-ignore
-    cogoToast.error(error?.response?.message, { heading: 'Error' });
+    cogoToast.error(error?.response?.data.message, { heading: 'Error' });
   }
 
   const onSubmit = (): void => {
-    execute({
-      data: { ...getValues() },
-    });
+    (async (): Promise<void> => {
+      try {
+        const dataForm = { ...getValues() };
+
+        await addressValidator(dataForm.address, dataForm.port, dataForm.checkerType);
+
+        if (dataForm.checkerType === 'http') {
+          dataForm.port = undefined;
+        }
+
+        execute({
+          data: dataForm,
+        });
+      } catch (error) {
+        cogoToast.error(error, { heading: 'Error' });
+      }
+    })();
   };
 
   return (
@@ -111,7 +132,7 @@ const CheckerFormComponent = ({ checkerData }): JSX.Element => {
             <label className="label input__label">Address</label>
             <div className="control has-icons-right">
               <input type="text" name="address" className="input" ref={register} />
-              {errors.address && <span className="tag is-danger">Checker is required</span>}
+              {errors.address && <span className="tag is-danger">Address is required</span>}
             </div>
           </div>
         </div>
@@ -132,7 +153,15 @@ const CheckerFormComponent = ({ checkerData }): JSX.Element => {
             <label className="label input__label">Cron</label>
             <div className="control has-icons-right">
               <input type="text" name="cron" className="input" ref={register} />
-              {errors.cron && <span className="tag is-danger">Cron is required</span>}
+              {errors.cron && (
+                <span className="tag is-danger">
+                  Cron don't respect format (
+                  <a href="https://crontab.guru/" target="_blank" rel="noopener noreferrer">
+                    Cron Helper
+                  </a>
+                  )
+                </span>
+              )}
             </div>
           </div>
           <div className="field column">
@@ -150,6 +179,7 @@ const CheckerFormComponent = ({ checkerData }): JSX.Element => {
                   </option>
                 ))}
               </select>
+              {errors.groupId && <span className="tag is-danger">Group is required</span>}
             </div>
           </div>
         </div>

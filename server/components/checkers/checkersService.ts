@@ -1,14 +1,7 @@
 import { MetricsService } from './../metrics/metricsService';
 import Checker, { CheckerType, CheckerAddDataType, CheckerEditDataType } from './checkersModel';
 import Group from '../groups/groupsModel';
-
-const addressValidator = async (address, port, type): Promise<Error | void> => {
-  if (type === 'http') {
-    if (!(address.startsWith('http://') || address.startsWith('https://'))) throw 'Address malformated';
-  } else {
-    if (!port) throw 'Port is missing';
-  }
-};
+import { addressValidator, cronValidator } from '../../../services/validator/checkerValidator';
 
 export class CheckersService {
   public static async addChecker(data: CheckerAddDataType): Promise<CheckerType | Error> {
@@ -19,6 +12,7 @@ export class CheckersService {
     if (!group) throw new Error('Group Not Found');
 
     await addressValidator(data.address, data.port, data.checkerType);
+    await cronValidator(data.cron);
 
     return await checkerData.save();
   }
@@ -30,6 +24,10 @@ export class CheckersService {
 
     if (data.address) {
       await addressValidator(data.address, data.port || checker.port, checker.checkerType);
+    }
+
+    if (data.cron) {
+      await cronValidator(data.cron);
     }
 
     const newChecker = await Checker.findByIdAndUpdate(
