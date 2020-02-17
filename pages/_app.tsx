@@ -25,6 +25,8 @@ const MyApp = (props): JSX.Element => {
           integrity="sha256-Pd28JXamAUfl4NS9QzGAdbaqdPQGG9dKLj3caGj28fg="
           crossOrigin="anonymous"
         />
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/solid.min.css" />
       </Head>
       <AuthProvider>
         <Component {...pageProps} />

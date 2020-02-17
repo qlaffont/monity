@@ -6,12 +6,13 @@ import cogoToast from 'cogo-toast';
 
 import Content from '../../../components/layout/Content';
 import Navbar from '../../../components/layout/Navbar';
-import { getCheckers, deleteChecker } from '../../../services/apis/checkers';
+import { getCheckers, deleteChecker, startChecker, stopChecker } from '../../../services/apis/checkers';
 import { apiErrorInterceptor } from '../../../services/auth/authService';
 
 const CheckersList = (): JSX.Element => {
   const [{ data, loading: isLoading, error }, execute] = useAxios(getCheckers(), { useCache: false });
   const [{ data: dataDelete, error: errorDelete }, executeDelete] = useAxios({}, { manual: true });
+  const [{ error: errorActive }, executeActive] = useAxios({}, { manual: true });
   const router = useRouter();
 
   if (error) {
@@ -21,6 +22,16 @@ const CheckersList = (): JSX.Element => {
   const deleteModal = (checker): void => {
     if (confirm(`Do you want to delete checker '${checker.name}' ?`)) {
       executeDelete(deleteChecker(checker._id));
+    }
+  };
+
+  const changeStatusChecker = (checker): void => {
+    if (checker.active) {
+      executeActive(stopChecker(checker._id));
+      cogoToast.success('Stopping checker in progress...', { heading: 'Success' });
+    } else {
+      executeActive(startChecker(checker._id));
+      cogoToast.success('Starting checker in progress...', { heading: 'Success' });
     }
   };
 
@@ -34,6 +45,12 @@ const CheckersList = (): JSX.Element => {
       cogoToast.error(errorDelete.message, { heading: 'Error' });
     }
   }, [dataDelete]);
+
+  useEffect(() => {
+    if (errorActive) {
+      cogoToast.error(errorActive.message, { heading: 'Error' });
+    }
+  }, [errorActive]);
 
   const renderCheckers = (): JSX.Element | undefined => {
     if (data) {
@@ -75,11 +92,29 @@ const CheckersList = (): JSX.Element => {
                         </button>
                       </Link>
 
-                      <button className="button is-outlined is-danger" onClick={(): void => deleteModal(checker)}>
+                      <button className="button is-outlined is-danger mr-1" onClick={(): void => deleteModal(checker)}>
                         <span className="icon">
                           <i className="far fa-trash-alt"></i>
                         </span>
                         <span>Delete</span>
+                      </button>
+
+                      <button className="button is-outlined is-info" onClick={(): void => changeStatusChecker(checker)}>
+                        {checker.active ? (
+                          <>
+                            <span className="icon">
+                              <i className="fas fa-toggle-on"></i>
+                            </span>
+                            <span>Stop</span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="icon">
+                              <i className="fas fa-toggle-off"></i>
+                            </span>
+                            <span>Start</span>
+                          </>
+                        )}
                       </button>
                     </td>
                   </tr>

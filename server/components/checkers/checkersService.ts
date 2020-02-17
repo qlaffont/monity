@@ -75,7 +75,7 @@ export class CheckersService {
 
     if (!id) throw new Error('Checker Not Found');
 
-    worker.postMessage({ cmd: 'start', id, address, type: checkerType, port, cron });
+    worker.postMessage({ cmd: 'init', id: id.toString(), address, type: checkerType, port, cron });
 
     await Checker.findByIdAndUpdate(
       {
@@ -95,7 +95,7 @@ export class CheckersService {
 
     if (!id) throw new Error('Checker Not Found');
 
-    worker.postMessage({ cmd: 'stop', id });
+    worker.postMessage({ cmd: 'stop', id: id.toString() });
 
     await Checker.findByIdAndUpdate(
       {
