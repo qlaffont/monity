@@ -1,4 +1,5 @@
 @import '~bulma';
+@import '~frappe-charts/dist/frappe-charts.min.css';
 
 @mixin mt-x {
   @for $i from 1 to 5 {

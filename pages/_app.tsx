@@ -2,8 +2,9 @@
 import React from 'react';
 import Head from 'next/head';
 
-import './app.scss';
 import AuthProvider from '../services/auth/authContext';
+
+import './app.scss';
 
 const MyApp = (props): JSX.Element => {
   const { Component, pageProps } = props;

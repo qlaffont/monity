@@ -9,20 +9,9 @@ import { getGroups } from '../../../services/apis/groups';
 import { getCheckers } from '../../../services/apis/checkers';
 
 import './index.scss';
+import { renderIcon } from '../../../components/metrics/metricsService';
 
 const RenderChecker = ({ checker }): JSX.Element => {
-  const renderIcon = (type): JSX.Element | void => {
-    switch (type) {
-      case 'ping':
-        return <i className="fas fa-server mr-2" aria-hidden="true"></i>;
-
-      case 'http':
-        return <i className="far fa-window-maximize mr-2" aria-hidden="true"></i>;
-
-      default:
-        break;
-    }
-  };
   return (
     <>
       <div className="panel-block">

@@ -29,9 +29,11 @@ const CheckersList = (): JSX.Element => {
     if (checker.active) {
       executeActive(stopChecker(checker._id));
       cogoToast.success('Stopping checker in progress...', { heading: 'Success' });
+      setTimeout(() => execute(), 1000);
     } else {
       executeActive(startChecker(checker._id));
       cogoToast.success('Starting checker in progress...', { heading: 'Success' });
+      setTimeout(() => execute(), 1000);
     }
   };
 
