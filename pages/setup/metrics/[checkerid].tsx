@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import useAxios from 'axios-hooks';
 import { useRouter } from 'next/router';
 
@@ -8,6 +8,7 @@ import { getCheckerById } from '../../../services/apis/checkers';
 import { exportMetrics, FieldEnum, FilterEnum } from '../../../services/apis/metrics';
 import { renderIcon } from '../../../components/metrics/metricsService';
 import FrappeChart from '../../../components/lib/chartFrappe';
+import { useForm } from 'react-hook-form';
 
 const sumArray = (array): number => {
   return array.reduce((accumulator, currentValue) => {
@@ -23,12 +24,18 @@ const avgArray = (array): number => {
 };
 
 const percentage = (num, num2): number => {
+  if (num2 === 0) {
+    return 100;
+  }
+
   return Math.round((num / num2) * 100);
 };
 
 const Index = (): JSX.Element => {
   const router = useRouter();
   const { checkerid: checkerId } = router.query;
+  const { register, handleSubmit, getValues } = useForm();
+  const [filter, setFilter] = useState(FilterEnum.HOUR);
   // @ts-ignore
   const [{ data, loading: isLoading }, execute] = useAxios(getCheckerById(checkerId), {
     useCache: false,
@@ -36,7 +43,7 @@ const Index = (): JSX.Element => {
   });
 
   const [{ data: dataMetrics, loading: isLoadingMetrics }, executeMetrics] = useAxios(
-    exportMetrics(checkerId?.toString(), FieldEnum.ms, FilterEnum.HOUR),
+    exportMetrics(checkerId?.toString(), FieldEnum.ms, filter),
     {
       useCache: false,
       manual: true,
@@ -44,7 +51,7 @@ const Index = (): JSX.Element => {
   );
 
   const [{ data: dataMetricsStatus, loading: isLoadingMetricsStatus }, executeMetricsStatus] = useAxios(
-    exportMetrics(checkerId?.toString(), FieldEnum.statusCode, FilterEnum.HOUR),
+    exportMetrics(checkerId?.toString(), FieldEnum.statusCode, filter),
     {
       useCache: false,
       manual: true,
@@ -57,7 +64,7 @@ const Index = (): JSX.Element => {
       executeMetrics();
       executeMetricsStatus();
     }
-  }, [checkerId]);
+  }, [checkerId, filter]);
 
   const renderAddress = (checker): JSX.Element | void => {
     if (checker) {
@@ -94,6 +101,10 @@ const Index = (): JSX.Element => {
     );
   };
 
+  const onSubmit = (): void => {
+    setFilter(getValues().filter);
+  };
+
   return (
     <>
       <Navbar />
@@ -104,10 +115,32 @@ const Index = (): JSX.Element => {
           <>
             <h2 className="title is-2">Metrics - {data?.data.name}</h2>
             <p>{data?.data.description}</p>
-            <p>
+            <p className="mb-3">
               {renderIcon(data?.data.checkerType)}
               {renderAddress(data?.data)}
             </p>
+            <div className="columns is-centered">
+              <div className="column is-two-fifths">
+                <div className="has-text-centered">
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <select name="filter" className="input" ref={register}>
+                      <option value={FilterEnum.HOUR} selected={FilterEnum.HOUR === filter}>
+                        Hour
+                      </option>
+                      <option value={FilterEnum.DAY} selected={FilterEnum.DAY === filter}>
+                        Day
+                      </option>
+                      <option value={FilterEnum.WEEK} selected={FilterEnum.WEEK === filter}>
+                        Week
+                      </option>
+                    </select>
+                    <button type="submit" className="button mt-1">
+                      Refresh Metrics
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
             <div className="columns mt-3">
               <div className="column">
                 <div>
