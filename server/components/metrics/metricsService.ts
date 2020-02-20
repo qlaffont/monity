@@ -2,13 +2,13 @@ import { exportMetrics, exportStatusCodeMetrics } from './metricsTools';
 import Metric, { MetricType, MetricAddDataType } from './metricsModel';
 import Checker from '../checkers/checkersModel';
 
-enum FilterEnum {
+export enum FilterEnum {
   HOUR = 'hour',
   DAY = 'day',
   WEEK = 'week',
 }
 
-enum FieldEnum {
+export enum FieldEnum {
   ms = 'ms',
   statusCode = 'statusCode',
 }
