@@ -37,6 +37,10 @@ const httpCall = data => {
         const dateEnd = Date.now();
         const ms = dateEnd - dateStart;
         resolve({ statusCode: res.status, ms });
+      }).catch(() => {
+        const dateEnd = Date.now();
+        const ms = dateEnd - dateStart;
+        resolve({ statusCode: 500, ms })
       });
     });
   };

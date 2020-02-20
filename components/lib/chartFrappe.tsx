@@ -16,7 +16,6 @@ const Graph = ({ title, data, type, height = 250, onSelect = (): void => {}, ...
         is_navigable: !!onSelect,
         ...rest,
       });
-
       if (onSelect) {
         graph.parent.addEventListener('data-select', onSelect);
       }

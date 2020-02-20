@@ -9,6 +9,23 @@ import { exportMetrics, FieldEnum, FilterEnum } from '../../../services/apis/met
 import { renderIcon } from '../../../components/metrics/metricsService';
 import FrappeChart from '../../../components/lib/chartFrappe';
 
+const sumArray = (array): number => {
+  return array.reduce((accumulator, currentValue) => {
+    if (typeof currentValue === 'string') {
+      return parseInt(currentValue, 10) + accumulator;
+    }
+    return accumulator + currentValue;
+  }, 0);
+};
+
+const avgArray = (array): number => {
+  return Math.round(sumArray(array) / array.length);
+};
+
+const percentage = (num, num2): number => {
+  return Math.round((num / num2) * 100);
+};
+
 const Index = (): JSX.Element => {
   const router = useRouter();
   const { checkerid: checkerId } = router.query;
@@ -70,11 +87,18 @@ const Index = (): JSX.Element => {
     }
   };
 
+  const errorPercentage = (): number => {
+    return percentage(
+      sumArray(dataMetricsStatus?.data['4xx']) + sumArray(dataMetricsStatus?.data['5xx']),
+      sumArray(dataMetricsStatus?.data['2xx']) + sumArray(dataMetricsStatus?.data['3xx']),
+    );
+  };
+
   return (
     <>
       <Navbar />
       <Content>
-        {isLoading || isLoadingMetrics || isLoadingMetricsStatus ? (
+        {isLoading || isLoadingMetrics || isLoadingMetricsStatus || !dataMetrics || !dataMetricsStatus ? (
           <>Loading ....</>
         ) : (
           <>
@@ -84,6 +108,43 @@ const Index = (): JSX.Element => {
               {renderIcon(data?.data.checkerType)}
               {renderAddress(data?.data)}
             </p>
+            <div className="columns mt-3">
+              <div className="column">
+                <div>
+                  <FrappeChart
+                    title="Status Code by type"
+                    type="pie"
+                    colors={['green', 'blue', 'orange', 'red']}
+                    data={{
+                      labels: ['2xx', '3xx', '4xx', '5xx'],
+                      datasets: [
+                        {
+                          name: 'Status Code',
+                          values: [
+                            sumArray(dataMetricsStatus?.data['2xx']),
+                            sumArray(dataMetricsStatus?.data['3xx']),
+                            sumArray(dataMetricsStatus?.data['4xx']),
+                            sumArray(dataMetricsStatus?.data['5xx']),
+                          ],
+                        },
+                      ],
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="column">
+                <h2 className="title is-3">Response Time (average)</h2>
+                <div className="has-text-centered">
+                  <p className="title is-2 mt-3">{avgArray(dataMetrics?.data.values)} ms</p>
+                </div>
+              </div>
+              <div className="column">
+                <h2 className="title is-3">Percentage Error (5xx/4xx)</h2>
+                <div className="has-text-centered">
+                  <p className="title is-2 mt-3">{errorPercentage()} %</p>
+                </div>
+              </div>
+            </div>
             <div className="mt-3">
               <FrappeChart
                 title="Response Time (in ms)"
@@ -98,6 +159,9 @@ const Index = (): JSX.Element => {
                     },
                   ],
                 }}
+                tooltipOptions={{
+                  formatTooltipY: (d): string => d + 'ms',
+                }}
               />
             </div>
 
@@ -107,25 +171,19 @@ const Index = (): JSX.Element => {
                 type="line"
                 heatline
                 region_fill
-                colors={['green', 'blue', 'orange', 'red']}
                 data={{
                   labels: dataMetricsStatus?.data.keys,
                   datasets: [
                     {
-                      values: dataMetricsStatus?.data['2xx'],
-                      name: '2xx',
+                      values: dataMetricsStatus?.data.values,
                     },
+                  ],
+                  yRegions: [
                     {
-                      values: dataMetricsStatus?.data['3xx'],
-                      name: '3xx',
-                    },
-                    {
-                      values: dataMetricsStatus?.data['4xx'],
-                      name: '4xx',
-                    },
-                    {
-                      values: dataMetricsStatus?.data['5xx'],
-                      name: '5xx',
+                      label: 'Good Status Code',
+                      start: 200,
+                      end: 399,
+                      options: { labelPos: 'right' },
                     },
                   ],
                 }}
