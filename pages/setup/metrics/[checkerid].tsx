@@ -166,13 +166,15 @@ const Index = (): JSX.Element => {
                 </div>
               </div>
               <div className="column">
-                <h2 className="title is-3">Response Time (average)</h2>
+                <h2 className="title is-3 mb-0">Response Time</h2>
+                <p>(average)</p>
                 <div className="has-text-centered">
                   <p className="title is-2 mt-3">{avgArray(dataMetrics?.data.values)} ms</p>
                 </div>
               </div>
               <div className="column">
-                <h2 className="title is-3">Percentage Error (5xx/4xx)</h2>
+                <h2 className="title is-3 mb-0">Percentage Error</h2>
+                <p>(5xx/4xx)</p>
                 <div className="has-text-centered">
                   <p className="title is-2 mt-3">{errorPercentage()} %</p>
                 </div>
