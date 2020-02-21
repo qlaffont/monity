@@ -16,11 +16,46 @@ const RenderToolTip = (description): JSX.Element => (
 const RenderChecker = ({ checker, statusCode, ms }): JSX.Element => {
   const avgMS = Math.round(ms.values.reduce((item, next) => item + next, 0) / ms.values.length);
 
+  const renderStatusChecker = (): JSX.Element => {
+    let status = '0';
+
+    for (let index = 0; index < statusCode.length; index++) {
+      const element = statusCode[index];
+      if (element.toString().charAt(0) > status) {
+        status = element.toString().charAt(0);
+      }
+    }
+
+    switch (status) {
+      case '2':
+        return <span className="has-text-success has-text-right">Operational</span>;
+        break;
+      case '3':
+        return <span className="has-text-info">Operational</span>;
+        break;
+      case '4':
+        return <span className="has-text-warning">Partial Outage</span>;
+        break;
+      case '5':
+        return <span className="has-text-danger">Major Outage</span>;
+        break;
+
+      default:
+        return <span className="has-text-grey">No Data</span>;
+        break;
+    }
+  };
+
   return (
     <>
       <div className="p-1">
         <p className="has-text-weight-medium title is-5 mb-1">
-          {checker.name} {checker.description && RenderToolTip(checker.description)}
+          <div className="is-flex has-space-between has-flex-wrap">
+            <div>
+              {checker.name} {checker.description && RenderToolTip(checker.description)}
+            </div>
+            <div>{renderStatusChecker()}</div>
+          </div>
         </p>
         <p>
           AVG Response time: <span className="has-text-weight-bold">{avgMS} ms</span>

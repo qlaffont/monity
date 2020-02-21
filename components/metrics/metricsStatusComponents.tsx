@@ -32,7 +32,7 @@ const MetricStatusComponent = ({ metrics }): JSX.Element => {
             return <RenderMetricItem value={metricValue} key={index}></RenderMetricItem>;
           })}
         </div>
-        <div className="has-text-right">
+        <div className="has-text-right ">
           <p className="is-size-7 has-text-grey is-italic">last 24 H (each tick = 30 min)</p>
         </div>
       </div>
