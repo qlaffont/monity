@@ -1,6 +1,8 @@
 import { exportMetrics, exportStatusCodeMetrics } from './metricsTools';
 import Metric, { MetricType, MetricAddDataType } from './metricsModel';
 import Checker from '../checkers/checkersModel';
+import fetch from 'node-fetch';
+import { formatMessage } from '../../services/templates/format';
 
 export enum FilterEnum {
   HOUR = 'hour',
@@ -114,5 +116,55 @@ export class MetricsService {
     }
 
     return metricsObject;
+  }
+
+  public static async sendWebhookNotif(options: MetricAddDataType): Promise<void> {
+    if (!options.ms || !options.statusCode || !options.checkerId) throw Error('ms, statusCode, checkerId is required');
+
+    if (process.env.WEBHOOK_URL && process.env.WEBHOOK_MESSAGE) {
+      const checker = await Checker.findById(options.checkerId);
+      if (!checker) throw new Error('Checker Not Found');
+
+      const metric = await Metric.findOne({ checkerId: options.checkerId })
+        .sort('metricsDate')
+        .exec();
+
+      if (options.statusCode !== metric.statusCode) {
+        const templateVars = [
+          {
+            name: 'oldStatusCode',
+            content: metric.statusCode,
+          },
+          {
+            name: 'newStatusCode',
+            content: options.statusCode,
+          },
+          {
+            name: 'checkerName',
+            content: checker.name,
+          },
+          {
+            name: 'checkerAddress',
+            content: checker.checkerType === 'http' ? checker.address : checker.address + ':' + checker.port,
+          },
+          {
+            name: 'checkerPort',
+            content: checker.port,
+          },
+        ];
+
+        const body = JSON.stringify({
+          text: formatMessage(process.env.WEBHOOK_MESSAGE, templateVars),
+          username: 'Monity',
+        }).replace(/\\\\n/g, '\\n');
+
+        // Send Notification
+        await fetch(process.env.WEBHOOK_URL, {
+          method: 'post',
+          body,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+    }
   }
 }
