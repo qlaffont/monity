@@ -4,7 +4,7 @@ import React from 'react';
 import './metricsStatusComponents.scss';
 
 const MetricStatusComponent = ({ metrics }): JSX.Element => {
-  const RenderMetricItem = (value): JSX.Element => {
+  const RenderMetricItem = ({ value }): JSX.Element => {
     switch (value.toString().charAt(0)) {
       case '2':
         return <div className="status status-good"></div>;
@@ -28,8 +28,8 @@ const MetricStatusComponent = ({ metrics }): JSX.Element => {
     <>
       <div className="metricsStatus">
         <div className="is-flex">
-          {metrics.map(metricValue => {
-            return RenderMetricItem(metricValue);
+          {metrics.map((metricValue, index) => {
+            return <RenderMetricItem value={metricValue} key={index}></RenderMetricItem>;
           })}
         </div>
         <div className="has-text-right">
