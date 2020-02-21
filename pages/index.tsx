@@ -17,14 +17,7 @@ const RenderChecker = ({ checker, statusCode, ms }): JSX.Element => {
   const avgMS = Math.round(ms.values.reduce((item, next) => item + next, 0) / ms.values.length);
 
   const renderStatusChecker = (): JSX.Element => {
-    let status = '0';
-
-    for (let index = 0; index < statusCode.length; index++) {
-      const element = statusCode[index];
-      if (element.toString().charAt(0) > status) {
-        status = element.toString().charAt(0);
-      }
-    }
+    const status = statusCode[statusCode.length - 1].toString().charAt(0);
 
     switch (status) {
       case '2':
