@@ -1,42 +1,73 @@
 @import '~bulma';
+@import '~bulma-tooltip/src/sass/index.sass';
 @import '~frappe-charts/dist/frappe-charts.min.css';
 
-@mixin mt-x {
+@mixin m-x {
   @for $i from 0 to 6 {
-    .mt-#{$i} {
-      margin-top: #{$i}rem;
+    .m-#{$i} {
+      margin: #{$i}rem !important;
     }
   }
-}
 
-@mixin mb-x {
-  @for $i from 0 to 6 {
-    .mb-#{$i} {
-      margin-bottom: #{$i}rem;
-    }
-  }
-}
-
-@mixin ml-x {
-  @for $i from 0 to 6 {
-    .ml-#{$i} {
-      margin-left: #{$i}rem;
-    }
-  }
-}
-
-@mixin mr-x {
   @for $i from 0 to 6 {
     .mr-#{$i} {
-      margin-right: #{$i}rem;
+      margin-right: #{$i}rem !important;
+    }
+  }
+
+  @for $i from 0 to 6 {
+    .ml-#{$i} {
+      margin-left: #{$i}rem !important;
+    }
+  }
+
+  @for $i from 0 to 6 {
+    .mb-#{$i} {
+      margin-bottom: #{$i}rem !important;
+    }
+  }
+
+  @for $i from 0 to 6 {
+    .mt-#{$i} {
+      margin-top: #{$i}rem !important;
     }
   }
 }
 
-@include mt-x;
-@include mb-x;
-@include ml-x;
-@include mr-x;
+@mixin p-x {
+  @for $i from 0 to 6 {
+    .p-#{$i} {
+      padding: #{$i}rem !important;
+    }
+  }
+
+  @for $i from 0 to 6 {
+    .pr-#{$i} {
+      padding-right: #{$i}rem !important;
+    }
+  }
+
+  @for $i from 0 to 6 {
+    .pl-#{$i} {
+      padding-left: #{$i}rem !important;
+    }
+  }
+
+  @for $i from 0 to 6 {
+    .pb-#{$i} {
+      padding-bottom: #{$i}rem !important;
+    }
+  }
+
+  @for $i from 0 to 6 {
+    .pt-#{$i} {
+      padding-top: #{$i}rm !important;
+    }
+  }
+}
+
+@include m-x;
+@include p-x;
 
 input[disabled], select[disabled]{
   border: 1px solid gray !important;

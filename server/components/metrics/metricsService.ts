@@ -5,6 +5,7 @@ import Checker from '../checkers/checkersModel';
 export enum FilterEnum {
   HOUR = 'hour',
   DAY = 'day',
+  DAY30 = 'day-30',
   WEEK = 'week',
 }
 
@@ -91,6 +92,9 @@ export class MetricsService {
 
     switch (options.filter) {
       case 'day':
+        searchDate.setDate(searchDate.getDate() - 1);
+        break;
+      case 'day-30':
         searchDate.setDate(searchDate.getDate() - 1);
         break;
       case 'week':

@@ -4,6 +4,7 @@ import { generateAxiosConfig, HTTPMethod } from './generateAxiosConfig';
 export enum FilterEnum {
   HOUR = 'hour',
   DAY = 'day',
+  DAY30 = 'day-30',
   WEEK = 'week',
 }
 

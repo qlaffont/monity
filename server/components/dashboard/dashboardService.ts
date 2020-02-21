@@ -9,6 +9,7 @@ export class DashboardService {
     let checkers = await CheckersService.getCheckers();
     const metricsStatusCode = {};
     const metricsMs = {};
+    const metricsStatusCodeSum = {};
 
     // Get Only Active Checkers
     checkers = checkers.filter(checker => {
@@ -23,16 +24,46 @@ export class DashboardService {
 
       metricsStatusCode[checkerId] = await MetricsService.exportMetrics({
         checkerId,
-        filter: FilterEnum.DAY,
+        filter: FilterEnum.DAY30,
         field: FieldEnum.statusCode,
       });
       metricsMs[checkerId] = await MetricsService.exportMetrics({
         checkerId,
-        filter: FilterEnum.DAY,
+        filter: FilterEnum.DAY30,
         field: FieldEnum.ms,
       });
+
+      // Calculate Metrics Status Code during 30 min
+      const iteration = 48;
+      const actualDate = new Date();
+
+      metricsStatusCodeSum[checkerId] = new Array(iteration).fill(0);
+
+      for (let index = iteration - 1; index >= 0; index--) {
+        if (index !== iteration - 1) {
+          actualDate.setMinutes(actualDate.getMinutes() - 30);
+        }
+        const previousDate = new Date(actualDate.getTime());
+        previousDate.setMinutes(actualDate.getMinutes() - 30);
+
+        // Search dates who have been between previous and actual
+        metricsStatusCode[checkerId].keys.map((dateMetric, indexMap) => {
+          if (
+            new Date(dateMetric).getTime() >= previousDate.getTime() &&
+            new Date(dateMetric).getTime() <= actualDate.getTime()
+          ) {
+            if (!metricsStatusCodeSum[checkerId][index]) {
+              metricsStatusCodeSum[checkerId][index] = metricsStatusCode[checkerId].values[indexMap];
+            } else {
+              if (metricsStatusCode[checkerId].values[indexMap] > metricsStatusCodeSum[checkerId][index]) {
+                metricsStatusCodeSum[checkerId][index] = metricsStatusCode[checkerId].values[indexMap];
+              }
+            }
+          }
+        });
+      }
     }
 
-    return { groups, checkers, metricsStatusCode, metricsMs };
+    return { groups, checkers, metricsStatusCode, metricsMs, metricsStatusCodeSum };
   }
 }

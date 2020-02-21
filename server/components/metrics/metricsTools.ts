@@ -49,6 +49,18 @@ export const exportMetrics = (metrics: MetricType[], filterDate: string, field =
     }
   }
 
+  if (filterDate === 'day-30') {
+    for (let index = 0; index < metrics.length; index++) {
+      const elem = metrics[index];
+
+      if (!result[new Date(elem.metricsDate).getHours() + new Date(elem.metricsDate).getMinutes()]) {
+        keys.push(getKeyFormat(elem.metricsDate, ['second']));
+        values.push(elem[field]);
+        result[new Date(elem.metricsDate).getHours() + new Date(elem.metricsDate).getMinutes()] = true;
+      }
+    }
+  }
+
   if (filterDate === 'week') {
     for (let index = 0; index < metrics.length; index++) {
       const elem = metrics[index];

@@ -1,6 +1,20 @@
 import successSchema from '../../schemas/success';
 import formErrorSchema from '../../schemas/formError';
 
+export const groupData = {
+  name: {
+    type: 'string',
+  },
+
+  description: {
+    type: 'string',
+  },
+
+  _id: {
+    type: 'string',
+  },
+};
+
 const checkerData = {
   name: {
     type: 'string',
@@ -12,20 +26,7 @@ const checkerData = {
 
   groupId: {
     type: ['object', 'string'],
-  },
-
-  _id: {
-    type: 'string',
-  },
-};
-
-export const groupData = {
-  name: {
-    type: 'string',
-  },
-
-  description: {
-    type: 'string',
+    properties: { ...groupData },
   },
 
   _id: {
@@ -111,6 +112,10 @@ export const getMetrics = {
         additionalProperties: true,
       },
       metricsMs: {
+        type: 'object',
+        additionalProperties: true,
+      },
+      metricsStatusCodeSum: {
         type: 'object',
         additionalProperties: true,
       },

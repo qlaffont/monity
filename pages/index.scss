@@ -1,0 +1,11 @@
+@import "~bulma/sass/utilities/_all.sass";
+
+.group {
+  border: 1px solid $grey-lighter;
+  border-radius: 5px;
+}
+
+.title  .fas {
+  font-size: 1rem;
+  color: $grey-light;
+}
