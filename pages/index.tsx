@@ -115,12 +115,19 @@ const Index = (): JSX.Element => {
 
   return (
     <>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/brands.min.css" />
       <div className="container mt-5">
         <div className="card">
           <div className="card-content">
-            <h1 className="title is-1"> Monity</h1>
+            <h1 className="title is-1"> 🖥 Monity</h1>
             {isLoading ? 'Loading...' : renderGroups()}
           </div>
+        </div>
+        <div className="m-3 has-text-centered">
+          Status page generated with <i className="fas fa-heart has-text-danger"></i> from{' '}
+          <a href="https://github.com/qlaffont/monity" target="_blank" className="link" rel="noopener noreferrer">
+            <i className="fab fa-github"></i> Monity
+          </a>
         </div>
       </div>
     </>

@@ -28,9 +28,7 @@ const Navbar = (): JSX.Element => {
     <nav className="navbar is-info" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
         <Link href="/">
-          <a className="navbar-item" href="https://bulma.io">
-            <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" />
-          </a>
+          <a className="navbar-item has-text-weight-bold">🖥 Monity</a>
         </Link>
 
         <a
@@ -62,6 +60,9 @@ const Navbar = (): JSX.Element => {
           </Link>
           <Link href="/setup/auth">
             <a className="navbar-item">Get Monity Auth Token</a>
+          </Link>
+          <Link href="/documentation">
+            <a className="navbar-item">REST Documentation</a>
           </Link>
         </div>
 

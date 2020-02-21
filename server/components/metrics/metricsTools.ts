@@ -41,10 +41,10 @@ export const exportMetrics = (metrics: MetricType[], filterDate: string, field =
     for (let index = 0; index < metrics.length; index++) {
       const elem = metrics[index];
 
-      if (!result[new Date(elem.metricsDate).getHours()]) {
+      if (!result[getKeyFormat(elem.metricsDate, ['minute', 'second']) + 'h']) {
         keys.push(getKeyFormat(elem.metricsDate, ['minute', 'second']) + 'h');
         values.push(elem[field]);
-        result[new Date(elem.metricsDate).getHours()] = true;
+        result[getKeyFormat(elem.metricsDate, ['minute', 'second']) + 'h'] = true;
       }
     }
   }
@@ -53,10 +53,10 @@ export const exportMetrics = (metrics: MetricType[], filterDate: string, field =
     for (let index = 0; index < metrics.length; index++) {
       const elem = metrics[index];
 
-      if (!result[new Date(elem.metricsDate).getHours() + new Date(elem.metricsDate).getMinutes()]) {
+      if (!result[getKeyFormat(elem.metricsDate, ['second'])]) {
         keys.push(getKeyFormat(elem.metricsDate, ['second']));
         values.push(elem[field]);
-        result[new Date(elem.metricsDate).getHours() + new Date(elem.metricsDate).getMinutes()] = true;
+        result[getKeyFormat(elem.metricsDate, ['second'])] = true;
       }
     }
   }
@@ -65,10 +65,10 @@ export const exportMetrics = (metrics: MetricType[], filterDate: string, field =
     for (let index = 0; index < metrics.length; index++) {
       const elem = metrics[index];
 
-      if (!result[new Date(elem.metricsDate).getDate()]) {
+      if (!result[getKeyFormat(elem.metricsDate, ['hour', 'minute', 'second'])]) {
         keys.push(getKeyFormat(elem.metricsDate, ['hour', 'minute', 'second']));
         values.push(elem[field]);
-        result[new Date(elem.metricsDate).getDate()] = true;
+        result[getKeyFormat(elem.metricsDate, ['hour', 'minute', 'second'])] = true;
       }
     }
   }

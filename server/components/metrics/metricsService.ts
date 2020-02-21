@@ -105,7 +105,7 @@ export class MetricsService {
         break;
     }
 
-    const metrics = await Metric.find({ checkerId: options.checkerId, metricsDate: { $gt: searchDate.getTime() } });
+    const metrics = await Metric.find({ checkerId: options.checkerId, metricsDate: { $gte: searchDate.getTime() } });
 
     let metricsObject = exportMetrics(metrics, options.filter, options.field);
 

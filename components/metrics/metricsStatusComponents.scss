@@ -6,8 +6,15 @@
     margin: 0.25rem;
     min-height: 25px;
     width: 100%;
+    min-width: 2px;
     &:first-child{
       margin-left: 0;
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    .status {
+      margin: 0.1rem !important;
     }
   }
 
