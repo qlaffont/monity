@@ -28,6 +28,7 @@ const MyApp = (props): JSX.Element => {
         />
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/solid.min.css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet" />
       </Head>
       <AuthProvider>
         <Component {...pageProps} />
