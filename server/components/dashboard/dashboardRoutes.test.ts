@@ -89,6 +89,7 @@ describe('DashboardRoutes', () => {
         'checkers',
         'metricsStatusCode',
         'metricsMs',
+        'metricsStatusCodeSum',
       ]);
     });
   });

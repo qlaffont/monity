@@ -3,6 +3,7 @@ import Metric, { MetricType, MetricAddDataType } from './metricsModel';
 import Checker from '../checkers/checkersModel';
 import fetch from 'node-fetch';
 import { formatMessage } from '../../services/templates/format';
+import { version } from '../../../package.json';
 
 export enum FilterEnum {
   HOUR = 'hour',
@@ -166,5 +167,33 @@ export class MetricsService {
         });
       }
     }
+  }
+
+  public static async prometheusExport(): Promise<string> {
+    let result = '';
+
+    // Tell that monity server export is working
+    result += 'monity_up 1\n';
+    result += '# HELP monity_version Monity Server Version\n';
+    result += `monity_version{version="${version}"} 1\n`;
+
+    const checkers = await Checker.find({ active: true });
+
+    for (let index = 0; index < checkers.length; index++) {
+      const checker = checkers[index];
+
+      const metric = await Metric.findOne({ checkerId: checker._id })
+        .sort('metricsDate')
+        .exec();
+
+      const key = checker.name.replace(/\s/g, '').replace(/[^\w\s]/gi, '`_');
+
+      result += `# HELP monity_checker_${key}_status Status Code for ${checker.name}\n`;
+      result += `monity_checker_${key}_status ${metric.statusCode}\n`;
+      result += `# HELP monity_checker_${key}_ms Response time in ms for ${checker.name}\n`;
+      result += `monity_checker_${key}_ms ${metric.ms}\n`;
+    }
+
+    return result;
   }
 }

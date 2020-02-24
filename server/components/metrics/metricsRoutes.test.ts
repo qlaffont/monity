@@ -145,7 +145,7 @@ describe('MetricsRoutes', () => {
     });
   });
 
-  describe('GET /metrics', () => {
+  describe('GET /metrics/all', () => {
     let id;
     beforeAll(async done => {
       const data = {
@@ -167,7 +167,7 @@ describe('MetricsRoutes', () => {
     it('should return an array with all metrics', async () => {
       const res = await fastify.inject({
         method: 'GET',
-        url: `/metrics`,
+        url: `/metrics/all`,
         ...authHeaders(token),
       });
       expect(res.statusCode).toEqual(200);
@@ -223,6 +223,44 @@ describe('MetricsRoutes', () => {
       });
 
       expect(res.statusCode).toEqual(404);
+    });
+  });
+
+  describe('GET /metrics', () => {
+    beforeAll(async done => {
+      const dataSample = {
+        ms: 2,
+        statusCode: 200,
+        checkerId: checker._id,
+      };
+
+      const res = await fastify.inject({
+        method: 'POST',
+        url: '/metrics',
+        ...authHeaders(token),
+        body: dataSample,
+      });
+      data = JSON.parse(res.body).data;
+      done();
+    });
+
+    it('should return prometheus export with token', async () => {
+      const res = await fastify.inject({
+        method: 'GET',
+        url: `/metrics`,
+        ...authHeaders(token),
+      });
+
+      expect(res.statusCode).toEqual(200);
+    });
+
+    it('should return prometheus export without token', async () => {
+      const res = await fastify.inject({
+        method: 'GET',
+        url: `/metrics`,
+      });
+
+      expect(res.statusCode).toEqual(200);
     });
   });
 });

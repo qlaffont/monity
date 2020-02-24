@@ -11,11 +11,13 @@ export default (app): void => {
     MetricsController.deleteMetric(req, res),
   );
 
-  app.get('/metrics', { schema: getMetrics, onRequest: verifyAuth(app) }, (req, res) =>
+  app.get('/metrics/all', { schema: getMetrics, onRequest: verifyAuth(app) }, (req, res) =>
     MetricsController.getMetrics(req, res),
   );
 
   app.get('/metrics/:metricId', { schema: getMetric, onRequest: verifyAuth(app) }, (req, res) =>
     MetricsController.getMetricById(req, res),
   );
+
+  app.get('/metrics', { onRequest: verifyAuth(app) }, (req, res) => MetricsController.prometheusMetrics(req, res));
 };

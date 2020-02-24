@@ -41,4 +41,13 @@ export class MetricsController {
       HandlingBoom(notFound('Metric not found'), res);
     }
   }
+
+  public static async prometheusMetrics(_req: FastifyRequest, res: FastifyReply<any>): Promise<any> {
+    try {
+      const result = await MetricsService.prometheusExport();
+      return res.status(200).send(result);
+    } catch (error) {
+      return res.code(500).send('monity_up 0');
+    }
+  }
 }
