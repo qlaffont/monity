@@ -234,13 +234,12 @@ describe('MetricsRoutes', () => {
         checkerId: checker._id,
       };
 
-      const res = await fastify.inject({
+      await fastify.inject({
         method: 'POST',
         url: '/metrics',
         ...authHeaders(token),
         body: dataSample,
       });
-      data = JSON.parse(res.body).data;
       done();
     });
 
