@@ -129,7 +129,7 @@ export class MetricsService {
         .sort('metricsDate')
         .exec();
 
-      if (options.statusCode !== metric.statusCode) {
+      if (metric && options.statusCode !== metric.statusCode) {
         const templateVars = [
           {
             name: 'oldStatusCode',
