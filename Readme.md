@@ -10,6 +10,7 @@ Website Monitor (Response Code, Response Time, Prometheus Compatibility)
 | DISABLE_AUTH                        | Disable Authentication and block access to API.<br><br>(Default: false)                                 | process.env.DISABLE_AUTH=true            |
 | WEBHOOK_URL                         | URL to call when Status Code Change (ex: Slack/Discord)                                                 | process.env.WEBHOOK_URL="myurl"          |
 | WEBHOOK_MESSAGE                     | Markdown Message to use for webhook                                                                     | process.env.WEBHOOK_MESSAGE="NEW STATUS" |
+| DISABLE_PROMETHEUS                  | Disable Prometheus Export                                                                               | process.env.DISABLE_PROMETHEUS=true      |
 
 ## Webhook
 

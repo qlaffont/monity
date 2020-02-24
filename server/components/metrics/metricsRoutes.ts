@@ -19,5 +19,5 @@ export default (app): void => {
     MetricsController.getMetricById(req, res),
   );
 
-  app.get('/metrics', { onRequest: verifyAuth(app) }, (req, res) => MetricsController.prometheusMetrics(req, res));
+  app.get('/metrics', (req, res) => MetricsController.prometheusMetrics(req, res));
 };

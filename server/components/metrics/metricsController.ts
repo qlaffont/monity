@@ -44,6 +44,9 @@ export class MetricsController {
 
   public static async prometheusMetrics(_req: FastifyRequest, res: FastifyReply<any>): Promise<any> {
     try {
+      if (process.env.DISABLE_PROMETHEUS) {
+        throw new Error('Prometheus export is disabled.');
+      }
       const result = await MetricsService.prometheusExport();
       return res.status(200).send(result);
     } catch (error) {
