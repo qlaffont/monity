@@ -10,7 +10,7 @@ const MetricStatusComponent = ({ metrics }): JSX.Element => {
         return <div className="status status-good"></div>;
         break;
       case '3':
-        return <div className="status status-good"></div>;
+        return <div className="status status-info"></div>;
         break;
       case '4':
         return <div className="status status-warn"></div>;
