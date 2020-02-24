@@ -42,14 +42,14 @@ const RenderChecker = ({ checker, statusCode, ms }): JSX.Element => {
   return (
     <>
       <div className="p-1">
-        <p className="has-text-weight-medium title is-5 mb-1">
+        <span className="has-text-weight-medium title is-5 mb-1">
           <div className="is-flex has-space-between has-flex-wrap">
             <div>
               {checker.name} {checker.description && RenderToolTip(checker.description)}
             </div>
             <div>{renderStatusChecker()}</div>
           </div>
-        </p>
+        </span>
         <p>
           AVG Response time: <span className="has-text-weight-bold">{avgMS} ms</span>
         </p>
