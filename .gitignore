@@ -98,3 +98,4 @@ css
 .idea
 .vscode
 *.css
+docker.env

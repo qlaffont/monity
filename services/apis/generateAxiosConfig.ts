@@ -11,7 +11,7 @@ export enum HTTPMethod {
 
 export const generateAxiosConfig = (url: string, method: HTTPMethod, data: any = undefined): AxiosRequestConfig => {
   const config: AxiosRequestConfig = {
-    baseURL: '//localhost:5000',
+    baseURL: 'http://localhost:5000',
     url,
     method,
   };
