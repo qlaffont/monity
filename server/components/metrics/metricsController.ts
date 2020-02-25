@@ -50,6 +50,7 @@ export class MetricsController {
       const result = await MetricsService.prometheusExport();
       return res.status(200).send(result);
     } catch (error) {
+      console.log(error);
       return res.code(500).send('monity_up 0');
     }
   }
