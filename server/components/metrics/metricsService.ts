@@ -189,6 +189,7 @@ export class MetricsService {
       const key = checker.name.replace(/\s/g, '').replace(/[^\w\s]/gi, '`_');
 
       result += `# HELP monity_checker_${key}_status Status Code for ${checker.name}\n`;
+      console.log(metric);
       result += `monity_checker_${key}_status ${metric.statusCode}\n`;
       result += `# HELP monity_checker_${key}_ms Response time in ms for ${checker.name}\n`;
       result += `monity_checker_${key}_ms ${metric.ms}\n`;
