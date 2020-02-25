@@ -1,23 +1,21 @@
 language: node_js
-
 node_js:
-  - '12'
-
+- '12'
 services:
-  - docker
-  - mongodb
-
+- docker
+- mongodb
 install:
-  - yarn install --silent
-
+- yarn install --silent
 before_script:
-  - sleep 15
-
+- sleep 15
 script:
-  - npm run test
-
+- npm run test
 deploy:
   provider: script
   script: bash deploy.sh
   on:
     branch: master
+env:
+  global:
+  - secure: NAe4raw/qV8RND11IlKMlmCWHgWOwHADkselH7EsCZvMJAG2izK9E4uG81gIpi5LzZOeEZpCxCVv2L7uUB6nTfO23YDFwkeTNqBNTVCYzksIA33yT20H+e9Tmdm2zx4l1FQki6GlnIA9bYY9TgTnUsvaVaWkllLUqUzPXFN+wi/xCj47ULNSkYosOPUStNCXdGU6T4Z6in2CA22CUfupDElySx99CIhnNTH5dy7HLngtTRqR9GZPtRhIox56xNQ64SHO1blkEQtdOZD9bYHrlVRhBsBSRQucZu1F0es29kO55OSFGEjOp+XU5ga8zFLzbI4bN/QXZjddHHme06DiLQxCiyeUveVA18h0Wm1P4XeQWILd4vLMn+orvT7TYGZuOlIAmbf/aDQXF1iMxVS7kxDIsgngeXvfECdDkw0U3BYV6IvBZ9d/PjCbYW63i46JiWWZJ0sSyIpOVKcDEvPJ5ALVcMd+0gFaoXzPtrlRG1XlCOqzt+xgW+LdA7P743kmNfEO5dDQUXLsfidFZV8ZiO2ZTqt6XeaISpKIYXNjg8uOEMJMTmkYOfEO2vuRKR3hh/TCnZnfnsd4emU/v/AHqVMUd+QBFBF0NZOTRkZT8Pt7QquD/T0sUGrN3dh+lEccRtfwI9hCLGLyTlXC1T+0e+BKT6L27AH+cYG+BdVCe1k=
+  - secure: J+UWlWNg5D34z5JFvvK+6p9U/bRIdTv9ytOGgCSHHbtW5HzVmxo4fx1NrL5SMD0sBk4MwC+DdDdYSd7+jYQDddXqwF0alQ7TiKorwarjXfO+OrjccXN/8sqNS9CZxyh+Jp9aCaBvQCpgBH/EkpVgHXNNWIAQn4QPt5CZuWVy2TySAn59n9I4nU+3HmyHZmd3w9WZiWze/QzRvIgWH7YXlQqq/NeER8Eovp9d9XL8EMkASAha6h1OKNG/6NNQkvLfZhK4dxpjEZCErxnM8C3B7YudSjIdMDbRCwh8icxAc8mgOdiHh9cRnxwjIVw7MSZOaMYpFhklqFc22+fmwKH8mB+QGPp74v3sRd0juvBRC3PoxfWjPpNMKFETyMv0+PZZFqgaOsoyASgqW5P4tJTpoRseaxzeH0os+aKBEdnlTJ9f2tekmGpfFxRx7fmYpdKrXAN8nB7dR158p1KGJMIlFqGhM6MJg0E13AmP7SOvVwEqWyYeXfeisDta+ZoMGYNW5mwEsdwj44hkRc/PqgeaJIQx2om12f94UEj8uwSuziU7iqX2FyJ0ylbnThFAyrsWOeEePngwkFW16aDPt3RCxBCqMx1N6D57hythOkx1QLa+hoqTN0PVJk1HYXPqPq4SiLxO9YY+V+/waUjdfCmGUbdFBgsIf5WUKTRnBsCGAHc=
