@@ -22,6 +22,7 @@ RUN yarn install --prod --frozen-lockfile --silent
 
 # Listen on the specified port
 EXPOSE 5000
+ENV PORT=5000
 
 # Set Node server
-# ENTRYPOINT PORT=5000 yarn start
+ENTRYPOINT ["yarn", "start"]
