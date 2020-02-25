@@ -1,0 +1,17 @@
+language: node_js
+
+node_js:
+  - '12'
+
+services:
+  - docker
+  - mongodb
+
+install:
+  - npm ci
+
+before_script:
+  - sleep 15
+
+script:
+  - npm run test
