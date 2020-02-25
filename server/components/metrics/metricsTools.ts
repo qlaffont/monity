@@ -33,7 +33,7 @@ export const getKeyFormat = (date: number, optionsToDelete: string[] = []): stri
 };
 
 export const exportMetrics = (metrics: MetricType[], filterDate: string, field = 'ms'): ExportMetricsType => {
-  const keys: string[] = [];
+  const keys: any[] = [];
   const values: any[] = [];
   const result = {};
 
@@ -45,6 +45,11 @@ export const exportMetrics = (metrics: MetricType[], filterDate: string, field =
         keys.push(getKeyFormat(elem.metricsDate, ['minute', 'second']) + 'h');
         values.push(elem[field]);
         result[getKeyFormat(elem.metricsDate, ['minute', 'second']) + 'h'] = true;
+      } else {
+        const lastValue = values[values.length - 1];
+        if (elem[field] > lastValue) {
+          values[values.length - 1] = elem[field];
+        }
       }
     }
   }
@@ -54,7 +59,7 @@ export const exportMetrics = (metrics: MetricType[], filterDate: string, field =
       const elem = metrics[index];
 
       if (!result[getKeyFormat(elem.metricsDate, ['second'])]) {
-        keys.push(getKeyFormat(elem.metricsDate, ['second']));
+        keys.push(elem.metricsDate);
         values.push(elem[field]);
         result[getKeyFormat(elem.metricsDate, ['second'])] = true;
       }
@@ -69,6 +74,11 @@ export const exportMetrics = (metrics: MetricType[], filterDate: string, field =
         keys.push(getKeyFormat(elem.metricsDate, ['hour', 'minute', 'second']));
         values.push(elem[field]);
         result[getKeyFormat(elem.metricsDate, ['hour', 'minute', 'second'])] = true;
+      } else {
+        const lastValue = values[values.length - 1];
+        if (elem[field] > lastValue) {
+          values[values.length - 1] = elem[field];
+        }
       }
     }
   }

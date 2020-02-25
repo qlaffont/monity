@@ -23,14 +23,6 @@ const avgArray = (array): number => {
   return Math.round(sumArray(array) / array.length);
 };
 
-const percentage = (num, num2): number => {
-  if (num2 === 0) {
-    return 100;
-  }
-
-  return Math.round((num / num2) * 100);
-};
-
 const Index = (): JSX.Element => {
   const router = useRouter();
   const { checkerid: checkerId } = router.query;
@@ -95,10 +87,9 @@ const Index = (): JSX.Element => {
   };
 
   const errorPercentage = (): number => {
-    return percentage(
-      sumArray(dataMetricsStatus?.data['4xx']) + sumArray(dataMetricsStatus?.data['5xx']),
-      sumArray(dataMetricsStatus?.data['2xx']) + sumArray(dataMetricsStatus?.data['3xx']),
-    );
+    const percent = sumArray(dataMetricsStatus?.data['4xx']) + sumArray(dataMetricsStatus?.data['5xx']);
+
+    return Math.round((percent / dataMetricsStatus?.data['4xx'].length) * 100);
   };
 
   const onSubmit = (): void => {
