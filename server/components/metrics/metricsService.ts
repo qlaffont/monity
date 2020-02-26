@@ -122,7 +122,7 @@ export class MetricsService {
   public static async sendWebhookNotif(options: MetricAddDataType): Promise<void> {
     if (!options.ms || !options.statusCode || !options.checkerId) throw Error('ms, statusCode, checkerId is required');
 
-    if (process.env.WEBHOOK_URL && process.env.WEBHOOK_MESSAGE) {
+    if (process.env.WEBHOOK_URL) {
       const checker = await Checker.findById(options.checkerId);
       if (!checker) throw new Error('Checker Not Found');
 
@@ -131,6 +131,13 @@ export class MetricsService {
         .exec();
 
       if (metric && options.statusCode !== metric.statusCode) {
+        let message =
+          ':information_source: **Status Changed** :information_source: \n __Checker__ : **|checkerName|** \n __Status Code__ : ~~*|oldStatusCode|*~~ to ***|newStatusCode|*** \n __Address__ : ***|checkerAddress|*** \n\n Powered by Monity';
+
+        if (process.env.WEBHOOK_MESSAGE) {
+          message = process.env.WEBHOOK_MESSAGE;
+        }
+
         const templateVars = [
           {
             name: 'oldStatusCode',
@@ -155,7 +162,7 @@ export class MetricsService {
         ];
 
         const body = JSON.stringify({
-          text: formatMessage(process.env.WEBHOOK_MESSAGE, templateVars),
+          text: formatMessage(message, templateVars),
           username: 'Monity',
         }).replace(/\\\\n/g, '\\n');
 
