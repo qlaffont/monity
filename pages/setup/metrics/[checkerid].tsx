@@ -9,6 +9,7 @@ import { exportMetrics, FieldEnum, FilterEnum } from '../../../services/apis/met
 import { renderIcon } from '../../../components/metrics/metricsService';
 import FrappeChart from '../../../components/lib/chartFrappe';
 import { useForm } from 'react-hook-form';
+import { apiErrorInterceptor } from '../../../services/auth/authService';
 
 const sumArray = (array): number => {
   return array.reduce((accumulator, currentValue) => {
@@ -28,11 +29,16 @@ const Index = (): JSX.Element => {
   const { checkerid: checkerId } = router.query;
   const { register, handleSubmit, getValues } = useForm();
   const [filter, setFilter] = useState(FilterEnum.HOUR);
+
   // @ts-ignore
-  const [{ data, loading: isLoading }, execute] = useAxios(getCheckerById(checkerId), {
+  const [{ data, loading: isLoading, error }, execute] = useAxios(getCheckerById(checkerId), {
     useCache: false,
     manual: true,
   });
+
+  if (error) {
+    apiErrorInterceptor(error, router);
+  }
 
   const [{ data: dataMetrics, loading: isLoadingMetrics }, executeMetrics] = useAxios(
     exportMetrics(checkerId?.toString(), FieldEnum.ms, filter),

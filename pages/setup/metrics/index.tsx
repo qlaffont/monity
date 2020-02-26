@@ -10,6 +10,8 @@ import { getCheckers } from '../../../services/apis/checkers';
 
 import './index.scss';
 import { renderIcon } from '../../../components/metrics/metricsService';
+import { useRouter } from 'next/router';
+import { apiErrorInterceptor } from '../../../services/auth/authService';
 
 const RenderChecker = ({ checker }): JSX.Element => {
   return (
@@ -73,8 +75,13 @@ RenderGroup.propTypes = {
 };
 
 const Index = (): JSX.Element => {
-  const [{ data }] = useAxios(getGroups(), { useCache: false });
+  const router = useRouter();
+  const [{ data, error }] = useAxios(getGroups(), { useCache: false });
   const [{ data: dataCheckers }] = useAxios(getCheckers(), { useCache: false });
+
+  if (error) {
+    apiErrorInterceptor(error, router);
+  }
 
   const renderGroups = (): JSX.Element | void => {
     if (data && data.data && dataCheckers && dataCheckers.data) {

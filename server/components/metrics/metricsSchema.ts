@@ -90,3 +90,8 @@ export const getMetric = {
   },
   ...apiSecurity,
 };
+
+export const getMetricPrometheus = {
+  tags: ['Prometheus'],
+  description: 'Export Prometheus Metrics',
+};

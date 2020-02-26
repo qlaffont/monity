@@ -1,4 +1,4 @@
-import { postMetric, deleteMetric, getMetrics, getMetric } from './metricsSchema';
+import { postMetric, deleteMetric, getMetrics, getMetric, getMetricPrometheus } from './metricsSchema';
 import { MetricsController } from './metricsController';
 import { verifyAuth } from '../../services/auth/authService';
 
@@ -19,5 +19,5 @@ export default (app): void => {
     MetricsController.getMetricById(req, res),
   );
 
-  app.get('/metrics', (req, res) => MetricsController.prometheusMetrics(req, res));
+  app.get('/metrics', { schema: getMetricPrometheus }, (req, res) => MetricsController.prometheusMetrics(req, res));
 };
