@@ -13,7 +13,7 @@ const RenderToolTip = (description): JSX.Element => (
   </span>
 );
 
-const RenderChecker = ({ checker, statusCode, ms }): JSX.Element => {
+const RenderChecker = ({ checker, statusCode, statusCodeKeys, ms }): JSX.Element => {
   const avgMS = Math.round(ms.values.reduce((item, next) => item + next, 0) / ms.values.length);
 
   const renderStatusChecker = (): JSX.Element => {
@@ -53,7 +53,7 @@ const RenderChecker = ({ checker, statusCode, ms }): JSX.Element => {
         <p>
           AVG Response time: <span className="has-text-weight-bold">{avgMS} ms</span>
         </p>
-        <MetricStatusComponent metrics={statusCode}></MetricStatusComponent>
+        <MetricStatusComponent metrics={statusCode} metricKeys={statusCodeKeys}></MetricStatusComponent>
       </div>
     </>
   );
@@ -68,7 +68,7 @@ RenderChecker.propTypes = {
   }),
 };
 
-const RenderGroup = ({ group, checkers, statusCode, ms }): JSX.Element => {
+const RenderGroup = ({ group, checkers, statusCode, statusCodeKeys, ms }): JSX.Element => {
   const haveCheckers = checkers.some(checker => {
     if (checker.groupId._id === group._id) {
       return true;
@@ -93,6 +93,7 @@ const RenderGroup = ({ group, checkers, statusCode, ms }): JSX.Element => {
                 key={checker._id}
                 checker={checker}
                 statusCode={statusCode[checker._id]}
+                statusCodeKeys={statusCodeKeys}
                 ms={ms[checker._id]}
               />
             );
@@ -132,10 +133,16 @@ const Index = (): JSX.Element => {
                 group={group}
                 checkers={data.data.checkers}
                 statusCode={data.data.metricsStatusCodeSum}
+                statusCodeKeys={data.data.metricsStatusCodeSumKeys}
                 ms={data.data.metricsMs}
               />
             );
           })}
+          <div className="has-text-right">
+            <i className="fas fa-info-circle"></i> Status Code: <span className="has-text-success">2xx</span>{' '}
+            <span className="has-text-info">3xx</span> <span className="has-text-warning">4xx</span>{' '}
+            <span className="has-text-danger">5xx</span>
+          </div>
         </>
       );
     }

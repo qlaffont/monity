@@ -119,6 +119,10 @@ export const getMetrics = {
         type: 'object',
         additionalProperties: true,
       },
+      metricsStatusCodeSumKeys: {
+        type: 'object',
+        additionalProperties: true,
+      },
     }),
     ...formErrorSchema(),
   },

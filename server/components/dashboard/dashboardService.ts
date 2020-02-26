@@ -2,6 +2,7 @@
 import { MetricsService, FilterEnum, FieldEnum } from './../metrics/metricsService';
 import { GroupsService } from '../groups/groupsService';
 import { CheckersService } from '../checkers/checkersService';
+import { getKeyFormat } from '../metrics/metricsTools';
 
 export class DashboardService {
   public static async getMetrics(): Promise<any> {
@@ -10,6 +11,7 @@ export class DashboardService {
     const metricsStatusCode = {};
     const metricsMs = {};
     const metricsStatusCodeSum = {};
+    let metricsStatusCodeSumKeys;
 
     // Get Only Active Checkers
     checkers = checkers.filter(checker => {
@@ -38,6 +40,7 @@ export class DashboardService {
       const actualDate = new Date();
 
       metricsStatusCodeSum[checkerId] = new Array(iteration).fill(0);
+      metricsStatusCodeSumKeys = new Array(iteration).fill('');
 
       for (let index = iteration - 1; index >= 0; index--) {
         if (index !== iteration - 1) {
@@ -45,6 +48,12 @@ export class DashboardService {
         }
         const previousDate = new Date(actualDate.getTime());
         previousDate.setMinutes(actualDate.getMinutes() - 30);
+
+        if (metricsStatusCodeSumKeys[index] === '') {
+          const prevStringDate = getKeyFormat(previousDate.getTime(), ['second']);
+          const nextStringDate = getKeyFormat(actualDate.getTime(), ['second']);
+          metricsStatusCodeSumKeys[index] = `${prevStringDate} - ${nextStringDate}`;
+        }
 
         // Search dates who have been between previous and actual
         metricsStatusCode[checkerId].keys.map((dateMetric, indexMap) => {
@@ -64,6 +73,6 @@ export class DashboardService {
       }
     }
 
-    return { groups, checkers, metricsStatusCode, metricsMs, metricsStatusCodeSum };
+    return { groups, checkers, metricsStatusCode, metricsMs, metricsStatusCodeSum, metricsStatusCodeSumKeys };
   }
 }

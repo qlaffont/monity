@@ -90,6 +90,7 @@ describe('DashboardRoutes', () => {
         'metricsStatusCode',
         'metricsMs',
         'metricsStatusCodeSum',
+        'metricsStatusCodeSumKeys',
       ]);
     });
   });
