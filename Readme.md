@@ -1,6 +1,6 @@
 # 🖥 Monity
 
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/qlaffont/monity/graphs/commit-activity) ![Travis (.com)](https://img.shields.io/travis/com/qlaffont/monity) ![David](https://img.shields.io/david/qlaffont/monity)
+[![Open Source Love](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](https://github.com/ellerbrock/open-source-badge/) [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/qlaffont/monity/graphs/commit-activity) ![Travis (.com)](https://img.shields.io/travis/com/qlaffont/monity) ![David](https://img.shields.io/david/qlaffont/monity)
 
 ![GitHub issues](https://img.shields.io/github/issues/qlaffont/monity) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
@@ -12,6 +12,8 @@ Website and Server Monitor
 - Check if port is open + Response Time
 - Export Metrics in Prometheus
 - Send Webhook when status code change (Slack/Discord)
+
+*Technology Used: Fastify, Next (React), Bulma*
 
 ---
 
