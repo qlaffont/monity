@@ -1,0 +1,9 @@
+.panel-block {
+  display: block;
+  .columns {
+    width: 100%;
+  }
+  .column:last-child{
+    text-align: right;
+  }
+}
