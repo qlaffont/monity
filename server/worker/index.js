@@ -33,15 +33,17 @@ const httpCall = data => {
   const prom = data => {
     return new Promise(resolve => {
       const dateStart = Date.now();
-      fetch(data.address, { redirect: 'manual' }).then(res => {
-        const dateEnd = Date.now();
-        const ms = dateEnd - dateStart;
-        resolve({ statusCode: res.status, ms });
-      }).catch(() => {
-        const dateEnd = Date.now();
-        const ms = dateEnd - dateStart;
-        resolve({ statusCode: 500, ms })
-      });
+      fetch(data.address, { redirect: 'manual' })
+        .then(res => {
+          const dateEnd = Date.now();
+          const ms = dateEnd - dateStart;
+          resolve({ statusCode: res.status, ms });
+        })
+        .catch(() => {
+          const dateEnd = Date.now();
+          const ms = dateEnd - dateStart;
+          resolve({ statusCode: 500, ms });
+        });
     });
   };
 
@@ -95,6 +97,16 @@ const info = () => {
   parentPort.postMessage({ cmd: 'info', data: keys });
 };
 
+/**
+ * Clean Old Metrics
+ */
+
+const clean = () => {
+  crons["cleanMetrics"] = new CronJob('* * */8 * *', () => {
+    parentPort.postMessage({ cmd: 'clean' });
+  });
+};
+
 parentPort.on('message', function(data) {
   if (typeof data === 'object') {
     if (process.env.DEBUG_WORKER && data.cmd && data.cmd !== 'info') {
@@ -113,6 +125,8 @@ parentPort.on('message', function(data) {
         break;
       case 'info':
         info();
+      case 'clean':
+        clean();
       default:
     }
   }

@@ -7,5 +7,18 @@ export default (_app, worker): void => {
       await MetricsService.sendWebhookNotif(data);
       await MetricsService.addMetric(data);
     }
+
+    if (msg.cmd === 'clean') {
+      await MetricsService.cleanOldMetric();
+    }
   });
+
+  if (!process.env.DISABLE_AUTOCLEAN) {
+    // Clean old metrics
+    (async (): Promise<void> => {
+      await MetricsService.cleanOldMetric();
+
+      worker.postMessage({ cmd: 'clean' });
+    })();
+  }
 };

@@ -57,6 +57,7 @@ To know the process to get auth token, you can go to [http://localhost:5000/setu
 | WEBHOOK_URL                         | URL to call when Status Code Change (ex: Slack/Discord)                                                 | process.env.WEBHOOK_URL="myurl"          |
 | WEBHOOK_MESSAGE                     | Markdown Message to use for webhook                                                                     | process.env.WEBHOOK_MESSAGE="NEW STATUS" |
 | DISABLE_PROMETHEUS                  | Disable Prometheus Export                                                                               | process.env.DISABLE_PROMETHEUS=true      |
+| DISABLE_AUTOCLEAN                   | Disable Auto Clean Metrics (default: false)                                                             | process.env.DISABLE_AUTOCLEAN=true       |
 
 ---
 

@@ -204,4 +204,13 @@ export class MetricsService {
 
     return result;
   }
+
+  public static async cleanOldMetric(): Promise<string | Error> {
+    const d = new Date();
+
+    d.setDate(d.getDate() - 7);
+
+    await Metric.deleteMany({ metricsDate: { $lt: d.getTime() } });
+    return 'Old Metrics Clean';
+  }
 }
