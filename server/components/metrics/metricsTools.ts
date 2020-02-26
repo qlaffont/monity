@@ -29,7 +29,7 @@ export const getKeyFormat = (date: number, optionsToDelete: string[] = []): stri
     });
   }
 
-  return new Date(date).toLocaleDateString('fr-FR', options);
+  return new Date(date).toLocaleDateString('en-GB', options);
 };
 
 export const exportMetrics = (metrics: MetricType[], filterDate: string, field = 'ms'): ExportMetricsType => {
@@ -41,10 +41,10 @@ export const exportMetrics = (metrics: MetricType[], filterDate: string, field =
     for (let index = 0; index < metrics.length; index++) {
       const elem = metrics[index];
 
-      if (!result[getKeyFormat(elem.metricsDate, ['minute', 'second']) + 'h']) {
-        keys.push(getKeyFormat(elem.metricsDate, ['minute', 'second']) + 'h');
+      if (!result[getKeyFormat(elem.metricsDate, ['minute', 'second']) + ':00']) {
+        keys.push(getKeyFormat(elem.metricsDate, ['minute', 'second']) + ':00');
         values.push(elem[field]);
-        result[getKeyFormat(elem.metricsDate, ['minute', 'second']) + 'h'] = true;
+        result[getKeyFormat(elem.metricsDate, ['minute', 'second']) + ':00'] = true;
       } else {
         const lastValue = values[values.length - 1];
         if (elem[field] > lastValue) {

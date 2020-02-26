@@ -14,7 +14,7 @@ const dev = process.env.NODE_ENV !== 'production';
 const worker = new Worker('./server/worker/index.js');
 
 const run = (): void => {
-  const fastify = Fastify({ logger: { level: 'error' } });
+  const fastify = Fastify({ logger: { level: 'error' }, pluginTimeout: 99999 });
 
   mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
