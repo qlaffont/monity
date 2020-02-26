@@ -4,7 +4,7 @@ set -e
 IMAGE="qlaffont/monity"
 GIT_VERSION=$(git describe --always --abbrev --tags --long)
 
-docker build -t ${IMAGE}:${GIT_VERSION}
+docker build -t ${IMAGE}:${GIT_VERSION} .
 docker tag ${IMAGE}:${GIT_VERSION} ${IMAGE}:latest
 
 echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
