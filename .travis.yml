@@ -11,10 +11,14 @@ before_script:
 script:
 - npm run test
 deploy:
-  provider: script
-  script: bash deploy.sh
-  on:
-    branch: master
+  - provider: script
+    script: bash deploy.sh
+    on:
+      branch: master
+  - provider: script
+    script: bash deploy-beta.sh
+    on:
+      branch: develop
 env:
   global:
   - secure: NAe4raw/qV8RND11IlKMlmCWHgWOwHADkselH7EsCZvMJAG2izK9E4uG81gIpi5LzZOeEZpCxCVv2L7uUB6nTfO23YDFwkeTNqBNTVCYzksIA33yT20H+e9Tmdm2zx4l1FQki6GlnIA9bYY9TgTnUsvaVaWkllLUqUzPXFN+wi/xCj47ULNSkYosOPUStNCXdGU6T4Z6in2CA22CUfupDElySx99CIhnNTH5dy7HLngtTRqR9GZPtRhIox56xNQ64SHO1blkEQtdOZD9bYHrlVRhBsBSRQucZu1F0es29kO55OSFGEjOp+XU5ga8zFLzbI4bN/QXZjddHHme06DiLQxCiyeUveVA18h0Wm1P4XeQWILd4vLMn+orvT7TYGZuOlIAmbf/aDQXF1iMxVS7kxDIsgngeXvfECdDkw0U3BYV6IvBZ9d/PjCbYW63i46JiWWZJ0sSyIpOVKcDEvPJ5ALVcMd+0gFaoXzPtrlRG1XlCOqzt+xgW+LdA7P743kmNfEO5dDQUXLsfidFZV8ZiO2ZTqt6XeaISpKIYXNjg8uOEMJMTmkYOfEO2vuRKR3hh/TCnZnfnsd4emU/v/AHqVMUd+QBFBF0NZOTRkZT8Pt7QquD/T0sUGrN3dh+lEccRtfwI9hCLGLyTlXC1T+0e+BKT6L27AH+cYG+BdVCe1k=
