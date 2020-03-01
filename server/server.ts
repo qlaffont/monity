@@ -7,11 +7,12 @@ import conf from '../next.config';
 import RouteLoaderConfig from './config/routes';
 import { ReturnFormError, HandlingBoom } from './services/httpHandling/httpHandlingService';
 import { badImplementation } from '@hapi/boom';
+import { join } from 'path';
 
 const port = parseInt(process.env.PORT || '5000', 10);
 const dev = process.env.NODE_ENV !== 'production';
 
-const worker = new Worker('./server/worker/index.js');
+const worker = new Worker(join(__dirname, 'worker', 'index.js'));
 
 const run = (): void => {
   const fastify = Fastify({ logger: { level: 'error' }, pluginTimeout: 99999 });
