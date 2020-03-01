@@ -2,11 +2,11 @@
 set -e
 
 IMAGE="qlaffont/monity"
-GIT_VERSION=$(git describe --always --abbrev --tags --long)
+NODE_VERSION=$(node -p "require('./package.json').version")
 
-docker build -t ${IMAGE}:${GIT_VERSION} .
-docker tag ${IMAGE}:${GIT_VERSION} ${IMAGE}:latest
+docker build -t ${IMAGE}:${NODE_VERSION} .
+docker tag ${IMAGE}:${NODE_VERSION} ${IMAGE}:latest
 
 echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-docker push ${IMAGE}:${GIT_VERSION}
+docker push ${IMAGE}:${NODE_VERSION}
 docker push ${IMAGE}:latest
