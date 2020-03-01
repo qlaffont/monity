@@ -1,3 +1,12 @@
+## 1.0.1 (2020-03-01)
+
+
+### Bug Fixes
+
+* **server.ts:** fix Docker Build ([2fdf6f3](https://github.com/qlaffont/monity/commit/2fdf6f3d295d485c70a3432ffc04584868d0d454))
+
+
+
 # 1.0.0 (2020-02-26)
 
 
