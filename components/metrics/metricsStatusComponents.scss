@@ -1,0 +1,36 @@
+@import "~bulma/sass/utilities/_all.sass";
+
+.metricsStatus {
+  .status {
+    background-color: $grey;
+    margin: 0.25rem;
+    min-height: 25px;
+    width: 100%;
+    min-width: 2px;
+    &:first-child{
+      margin-left: 0;
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    .status {
+      margin: 0.1rem !important;
+    }
+  }
+
+  .status-good {
+    background-color: $success;
+  }
+
+  .status-info {
+    background-color: $info;
+  }
+
+  .status-warn {
+    background-color: $warning;
+  }
+
+  .status-danger {
+    background-color: $danger;
+  }
+}

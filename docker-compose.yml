@@ -1,0 +1,21 @@
+version: '2.4'
+
+services:
+  monity:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - "mongo"
+    environment:
+      - MONGODB_URI=mongodb://mongo/monity
+      - NODE_ENV=production
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - "mongodata:/data/db"
+    command: mongod
+volumes:
+  mongodata:
