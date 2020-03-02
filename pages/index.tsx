@@ -122,7 +122,7 @@ RenderGroup.propTypes = {
 const Index = (): JSX.Element => {
   const [{ data, loading: isLoading }] = useAxios(getMetrics());
 
-  const renderGroups = (): JSX.Element | void => {
+  const renderGroups = (): JSX.Element => {
     if (data && data.data) {
       return (
         <>
@@ -146,6 +146,8 @@ const Index = (): JSX.Element => {
         </>
       );
     }
+
+    return <p className="has-text-grey">No Metrics</p>;
   };
 
   return (

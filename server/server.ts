@@ -14,10 +14,10 @@ const dev = process.env.NODE_ENV !== 'production';
 
 const worker = new Worker(join(__dirname, 'worker', 'index.js'));
 
-const run = (): void => {
+const run = async (): Promise<void> => {
   const fastify = Fastify({ logger: { level: 'error' }, pluginTimeout: 99999 });
 
-  mongoose.connect(process.env.MONGODB_URI, {
+  await mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
