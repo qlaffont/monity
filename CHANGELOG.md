@@ -1,3 +1,10 @@
+## 1.0.2 (2020-03-02)
+
+
+### Bug Fixes
+
+* **server:** wait Mongoose Connection + Fix Domain Error with Axios ([0e588ca](https://github.com/qlaffont/monity/commit/0e588ca95ea7c329b3f953a35252f682eea01cdc))
+
 ## 1.0.1 (2020-03-01)
 
 
