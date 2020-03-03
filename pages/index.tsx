@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect } from 'react';
+import React from 'react';
 import useAxios from 'axios-hooks';
 import PropTypes from 'prop-types';
-import useSSR from 'use-ssr';
 import { getMetrics } from '../services/apis/dashboard';
 import MetricStatusComponent from '../components/metrics/metricsStatusComponents';
 
@@ -121,15 +120,7 @@ RenderGroup.propTypes = {
 };
 
 const Index = (): JSX.Element => {
-  const [{ data, loading: isLoading }, execute] = useAxios(getMetrics(), { manual: true });
-
-  const { isServer } = useSSR();
-
-  useEffect(() => {
-    if (!isServer) {
-      execute();
-    }
-  }, [isServer]);
+  const [{ data, loading: isLoading }] = useAxios(getMetrics());
 
   const renderGroups = (): JSX.Element => {
     if (data && data.data) {
