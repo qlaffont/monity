@@ -1,3 +1,12 @@
+
+## 1.0.3 (2020-03-03)
+
+
+### Bug Fixes
+
+* **ssr:** fix SSR ([0eb6db6](https://github.com/qlaffont/monity/commit/0eb6db6cae9b913044a83d4509fb7c3cef078ade))
+
+
 ## 1.0.2 (2020-03-02)
 
 
