@@ -89,6 +89,7 @@ const run = async (): Promise<void> => {
         }
 
         fastify.register(require('fastify-helmet'));
+        fastify.register(require('fastify-favicon'));
 
         // Load Routes
         RouteLoaderConfig(fastify, worker);
