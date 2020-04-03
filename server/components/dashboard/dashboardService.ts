@@ -21,7 +21,10 @@ export class DashboardService {
   public static async getMetricsByCheckerIdCache(checkerId: string): Promise<any> {
     const cache = await Dashboard.findOne({ idChecker: checkerId });
 
-    return JSON.stringify(cache);
+    if (cache) {
+      return JSON.parse(cache.value);
+    }
+    return {};
   }
 
   public static async getMetricsByCheckerId(checkerId: string): Promise<any> {
