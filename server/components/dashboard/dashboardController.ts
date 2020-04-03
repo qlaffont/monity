@@ -17,7 +17,7 @@ export class DashboardController {
 
   public static async getMetricsByCheckerId(req: FastifyRequest, res: FastifyReply<any>): Promise<any> {
     try {
-      const result = await DashboardService.getMetricsByCheckerId(req.params.id);
+      const result = await DashboardService.getMetricsByCheckerIdCache(req.params.id);
       ReturnSuccess(res, undefined, { data: result });
     } catch (error) {
       HandlingBoom(badImplementation(), res);

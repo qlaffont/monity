@@ -1,3 +1,4 @@
+import { DashboardService } from './../dashboard/dashboardService';
 import { MetricsService } from './metricsService';
 export default (_app, worker): void => {
   // Listen Callback from Worker
@@ -11,6 +12,10 @@ export default (_app, worker): void => {
     if (msg.cmd === 'clean') {
       await MetricsService.cleanOldMetric();
     }
+
+    if (msg.cmd === 'cache') {
+      await DashboardService.loadCache();
+    }
   });
 
   if (!process.env.DISABLE_AUTOCLEAN) {
@@ -21,4 +26,10 @@ export default (_app, worker): void => {
       worker.postMessage({ cmd: 'clean' });
     })();
   }
+
+  (async (): Promise<void> => {
+    await DashboardService.loadCache();
+
+    worker.postMessage({ cmd: 'cache' });
+  })();
 };

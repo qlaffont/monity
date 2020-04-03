@@ -3,6 +3,7 @@ import { MetricsService, FilterEnum, FieldEnum } from './../metrics/metricsServi
 import { GroupsService } from '../groups/groupsService';
 import { CheckersService } from '../checkers/checkersService';
 import { getKeyFormat } from '../metrics/metricsTools';
+import Dashboard from './dashboardModel';
 
 export class DashboardService {
   public static async getCheckers(): Promise<any> {
@@ -15,6 +16,12 @@ export class DashboardService {
     });
 
     return { checkers, groups };
+  }
+
+  public static async getMetricsByCheckerIdCache(checkerId: string): Promise<any> {
+    const cache = await Dashboard.findOne({ idChecker: checkerId });
+
+    return JSON.stringify(cache);
   }
 
   public static async getMetricsByCheckerId(checkerId: string): Promise<any> {
@@ -57,10 +64,7 @@ export class DashboardService {
 
       // Search dates who have been between previous and actual
       metricsStatusCode.keys.map((dateMetric, indexMap) => {
-        if (
-          dateMetric >= previousDate.getTime() &&
-          dateMetric <= actualDate.getTime()
-        ) {
+        if (dateMetric >= previousDate.getTime() && dateMetric <= actualDate.getTime()) {
           if (!metricsStatusCodeSum[index]) {
             metricsStatusCodeSum[index] = metricsStatusCode.values[indexMap];
           } else {
@@ -73,5 +77,43 @@ export class DashboardService {
     }
 
     return { metricsMs, metricsStatusCodeSum, metricsStatusCodeSumKeys };
+  }
+
+  public static async loadCache(): Promise<void> {
+    let checkers = await CheckersService.getCheckers();
+
+    // Get Only Active Checkers
+    checkers = checkers.filter(checker => {
+      return checker.active;
+    });
+
+    for (let index = 0; index < checkers.length; index++) {
+      const checkerItem = checkers[index];
+
+      // @ts-ignore
+      const stats = await this.getMetricsByCheckerId(checkerItem._id);
+      // @ts-ignore
+      let cache = await Dashboard.findOne({ idChecker: checkerItem._id });
+
+      if (!cache) {
+        cache = new Dashboard({
+          //@ts-ignore
+          idChecker: checkerItem._id,
+          value: JSON.stringify(stats),
+        });
+
+        await cache.save();
+      } else {
+        await Dashboard.findOneAndUpdate(
+          {
+            _id: cache._id,
+          },
+          {
+            value: JSON.stringify(stats),
+            lastCache: Date.now(),
+          },
+        );
+      }
+    }
   }
 }
