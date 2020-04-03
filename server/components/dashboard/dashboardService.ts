@@ -58,8 +58,8 @@ export class DashboardService {
       // Search dates who have been between previous and actual
       metricsStatusCode.keys.map((dateMetric, indexMap) => {
         if (
-          new Date(dateMetric).getTime() >= previousDate.getTime() &&
-          new Date(dateMetric).getTime() <= actualDate.getTime()
+          dateMetric >= previousDate.getTime() &&
+          dateMetric <= actualDate.getTime()
         ) {
           if (!metricsStatusCodeSum[index]) {
             metricsStatusCodeSum[index] = metricsStatusCode.values[indexMap];
