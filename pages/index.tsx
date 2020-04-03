@@ -17,6 +17,22 @@ const RenderChecker = ({ checker }): JSX.Element => {
   const [{ data, loading: isLoading }] = useAxios(getMetricsByCheckerId(checker._id));
 
   if (!isLoading && data && data.data) {
+    if (!data.data.metricsMs) {
+      return (
+        <>
+          <div className="p-1">
+            <span className="has-text-weight-medium title is-5 mb-1">
+              <div className="is-flex has-space-between has-flex-wrap">
+                <div>
+                  {checker.name} {checker.description && RenderToolTip(checker.description)}
+                </div>
+                <div>Please come back in 5 min...</div>
+              </div>
+            </span>
+          </div>
+        </>
+      );
+    }
     const { metricsMs: ms, metricsStatusCodeSum: statusCode, metricsStatusCodeSumKeys: statusCodeKeys } = data.data;
     const avgMS = Math.round(ms.values.reduce((item, next) => item + next, 0) / ms.values.length);
 
