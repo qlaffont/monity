@@ -120,18 +120,14 @@ describe('DashboardRoutes', () => {
       done();
     });
 
-    it('should return all data for dedicated checkers', async () => {
+    it('should return no data if no cache', async () => {
       const res = await fastify.inject({
         method: 'GET',
         url: `/dashboard/metrics/${checker._id}`,
       });
       expect(res.statusCode).toEqual(200);
       expect(JSON.parse(res.body)).toMatchObject({ message: 'Success' });
-      expect(Object.keys(JSON.parse(res.body).data)).toMatchObject([
-        'metricsMs',
-        'metricsStatusCodeSum',
-        'metricsStatusCodeSumKeys',
-      ]);
+      expect(Object.keys(JSON.parse(res.body).data)).toMatchObject([]);
     });
   });
 });
