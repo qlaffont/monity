@@ -1,3 +1,11 @@
+## [1.0.5](https://github.com/qlaffont/monity/compare/1.0.4...1.0.5) (2020-04-03)
+
+
+### Bug Fixes
+
+* **worker:** fix Worker Issue (Clean+Cache not started) ([ce939dc](https://github.com/qlaffont/monity/commit/ce939dc33efb479ee05d6e4a24740b86f528fdbd))
+
+
 ## [1.0.4](https://github.com/qlaffont/monity/compare/1.0.3...1.0.4) (2020-04-03)
 
 
