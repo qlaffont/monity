@@ -88,11 +88,41 @@ export const metricMsData = {
   },
 };
 
-export const getMetrics = {
+export const getMetricsByCheckerId = {
   tags: ['Dashboard'],
-  description: 'Fetch Metrics for public use',
+  description: 'Fetch Metrics for public use by CheckerId',
   response: {
     ...successSchema('Checker successfully created !', {
+      metricsStatusCode: {
+        type: 'object',
+        additionalProperties: true,
+      },
+      metricsMs: {
+        type: 'object',
+        additionalProperties: true,
+      },
+      metricsStatusCodeSum: {
+        type: 'array',
+        items: {
+          type: 'number',
+        },
+      },
+      metricsStatusCodeSumKeys: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
+      },
+    }),
+    ...formErrorSchema(),
+  },
+};
+
+export const getCheckers = {
+  tags: ['Dashboard'],
+  description: 'Fetch Checkers for public use by CheckerId',
+  response: {
+    ...successSchema('Groups & Checkers List', {
       groups: {
         type: 'array',
         items: {
@@ -106,22 +136,6 @@ export const getMetrics = {
           type: 'object',
           properties: checkerData,
         },
-      },
-      metricsStatusCode: {
-        type: 'object',
-        additionalProperties: true,
-      },
-      metricsMs: {
-        type: 'object',
-        additionalProperties: true,
-      },
-      metricsStatusCodeSum: {
-        type: 'object',
-        additionalProperties: true,
-      },
-      metricsStatusCodeSumKeys: {
-        type: 'object',
-        additionalProperties: true,
       },
     }),
     ...formErrorSchema(),

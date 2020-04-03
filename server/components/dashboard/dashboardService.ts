@@ -5,74 +5,73 @@ import { CheckersService } from '../checkers/checkersService';
 import { getKeyFormat } from '../metrics/metricsTools';
 
 export class DashboardService {
-  public static async getMetrics(): Promise<any> {
+  public static async getCheckers(): Promise<any> {
     const groups = await GroupsService.getGroups();
     let checkers = await CheckersService.getCheckers();
-    const metricsStatusCode = {};
-    const metricsMs = {};
-    const metricsStatusCodeSum = {};
-    let metricsStatusCodeSumKeys;
 
     // Get Only Active Checkers
     checkers = checkers.filter(checker => {
       return checker.active;
     });
 
-    // Fetch Metrics for Each Active Checker
-    for (let index = 0; index < checkers.length; index++) {
-      const checker = checkers[index];
-      // @ts-ignore
-      const checkerId = checker._id;
+    return { checkers, groups };
+  }
 
-      metricsStatusCode[checkerId] = await MetricsService.exportMetrics({
-        checkerId,
-        filter: FilterEnum.DAY30,
-        field: FieldEnum.statusCode,
-      });
-      metricsMs[checkerId] = await MetricsService.exportMetrics({
-        checkerId,
-        filter: FilterEnum.DAY30,
-        field: FieldEnum.ms,
-      });
+  public static async getMetricsByCheckerId(checkerId: string): Promise<any> {
+    const checker = await CheckersService.getCheckerById(checkerId);
 
-      // Calculate Metrics Status Code during 30 min
-      const iteration = 48;
-      const actualDate = new Date();
-
-      metricsStatusCodeSum[checkerId] = new Array(iteration).fill(0);
-      metricsStatusCodeSumKeys = new Array(iteration).fill('');
-
-      for (let index = iteration - 1; index >= 0; index--) {
-        if (index !== iteration - 1) {
-          actualDate.setMinutes(actualDate.getMinutes() - 30);
-        }
-        const previousDate = new Date(actualDate.getTime());
-        previousDate.setMinutes(actualDate.getMinutes() - 30);
-
-        if (metricsStatusCodeSumKeys[index] === '') {
-          const prevStringDate = getKeyFormat(previousDate.getTime(), ['second']);
-          const nextStringDate = getKeyFormat(actualDate.getTime(), ['second']);
-          metricsStatusCodeSumKeys[index] = `${prevStringDate} - ${nextStringDate}`;
-        }
-
-        // Search dates who have been between previous and actual
-        metricsStatusCode[checkerId].keys.map((dateMetric, indexMap) => {
-          if (
-            new Date(dateMetric).getTime() >= previousDate.getTime() &&
-            new Date(dateMetric).getTime() <= actualDate.getTime()
-          ) {
-            if (!metricsStatusCodeSum[checkerId][index]) {
-              metricsStatusCodeSum[checkerId][index] = metricsStatusCode[checkerId].values[indexMap];
-            } else {
-              if (metricsStatusCode[checkerId].values[indexMap] > metricsStatusCodeSum[checkerId][index]) {
-                metricsStatusCodeSum[checkerId][index] = metricsStatusCode[checkerId].values[indexMap];
-              }
-            }
-          }
-        });
-      }
+    if (!checker || !checker.active) {
+      throw new Error('Checker Not Found');
     }
 
-    return { groups, checkers, metricsStatusCode, metricsMs, metricsStatusCodeSum, metricsStatusCodeSumKeys };
+    const metricsStatusCode = await MetricsService.exportMetrics({
+      checkerId,
+      filter: FilterEnum.DAY30,
+      field: FieldEnum.statusCode,
+    });
+    const metricsMs = await MetricsService.exportMetrics({
+      checkerId,
+      filter: FilterEnum.DAY30,
+      field: FieldEnum.ms,
+    });
+
+    // Calculate Metrics Status Code during 30 min
+    const iteration = 48;
+    const actualDate = new Date();
+
+    const metricsStatusCodeSum = new Array(iteration).fill(0);
+    const metricsStatusCodeSumKeys = new Array(iteration).fill('');
+
+    for (let index = iteration - 1; index >= 0; index--) {
+      if (index !== iteration - 1) {
+        actualDate.setMinutes(actualDate.getMinutes() - 30);
+      }
+      const previousDate = new Date(actualDate.getTime());
+      previousDate.setMinutes(actualDate.getMinutes() - 30);
+
+      if (metricsStatusCodeSumKeys[index] === '') {
+        const prevStringDate = getKeyFormat(previousDate.getTime(), ['second']);
+        const nextStringDate = getKeyFormat(actualDate.getTime(), ['second']);
+        metricsStatusCodeSumKeys[index] = `${prevStringDate} - ${nextStringDate}`;
+      }
+
+      // Search dates who have been between previous and actual
+      metricsStatusCode.keys.map((dateMetric, indexMap) => {
+        if (
+          new Date(dateMetric).getTime() >= previousDate.getTime() &&
+          new Date(dateMetric).getTime() <= actualDate.getTime()
+        ) {
+          if (!metricsStatusCodeSum[index]) {
+            metricsStatusCodeSum[index] = metricsStatusCode.values[indexMap];
+          } else {
+            if (metricsStatusCode.values[indexMap] > metricsStatusCodeSum[index]) {
+              metricsStatusCodeSum[index] = metricsStatusCode.values[indexMap];
+            }
+          }
+        }
+      });
+    }
+
+    return { metricsStatusCode, metricsMs, metricsStatusCodeSum, metricsStatusCodeSumKeys };
   }
 }
