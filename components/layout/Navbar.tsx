@@ -5,6 +5,8 @@ import cogoToast from 'cogo-toast';
 
 import { AuthContext } from '../../services/auth/authContext';
 
+import './Navbar.scss';
+
 const Navbar = (): JSX.Element => {
   const ctx = React.useContext(AuthContext);
   const [token, setToken] = useState(ctx?.auth.token);

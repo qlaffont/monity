@@ -105,6 +105,7 @@ const clean = () => {
   crons["cleanMetrics"] = new CronJob('* * */8 * *', () => {
     parentPort.postMessage({ cmd: 'clean' });
   });
+  crons["cleanMetrics"].start();
 };
 
 /**
@@ -115,6 +116,7 @@ const cache = () => {
   crons["cache"] = new CronJob('*/5 * * * *', () => {
     parentPort.postMessage({ cmd: 'cache' });
   });
+  crons["cache"].start();
 };
 
 parentPort.on('message', function(data) {
@@ -135,10 +137,13 @@ parentPort.on('message', function(data) {
         break;
       case 'info':
         info();
+        break;
       case 'clean':
         clean();
+        break;
       case 'cache':
         cache();
+        break;
       default:
     }
   }
