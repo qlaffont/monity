@@ -93,10 +93,6 @@ export const getMetricsByCheckerId = {
   description: 'Fetch Metrics for public use by CheckerId',
   response: {
     ...successSchema('Checker successfully created !', {
-      metricsStatusCode: {
-        type: 'object',
-        additionalProperties: true,
-      },
       metricsMs: {
         type: 'object',
         additionalProperties: true,

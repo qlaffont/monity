@@ -72,6 +72,6 @@ export class DashboardService {
       });
     }
 
-    return { metricsStatusCode, metricsMs, metricsStatusCodeSum, metricsStatusCodeSumKeys };
+    return { metricsMs, metricsStatusCodeSum, metricsStatusCodeSumKeys };
   }
 }

@@ -128,7 +128,6 @@ describe('DashboardRoutes', () => {
       expect(res.statusCode).toEqual(200);
       expect(JSON.parse(res.body)).toMatchObject({ message: 'Success' });
       expect(Object.keys(JSON.parse(res.body).data)).toMatchObject([
-        'metricsStatusCode',
         'metricsMs',
         'metricsStatusCodeSum',
         'metricsStatusCodeSumKeys',
