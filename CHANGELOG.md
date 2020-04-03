@@ -1,3 +1,23 @@
+## [1.0.4](https://github.com/qlaffont/monity/compare/1.0.3...1.0.4) (2020-04-03)
+
+
+### Bug Fixes
+
+* **dashboard:** fix issues in page ([bcdd921](https://github.com/qlaffont/monity/commit/bcdd921b3e8f400e18bf467974948467a5d615c2))
+
+
+### Features
+
+* **favicon:** add Favicon ([40577cc](https://github.com/qlaffont/monity/commit/40577ccb04707f0cea33b1e2954eedeea7b0c2de))
+
+
+### Performance Improvements
+
+* **dashboard:** add Caching System ([16f3b63](https://github.com/qlaffont/monity/commit/16f3b63865349a5bfd3e21cdf459f4e50efa9a53))
+* **dashboard:** improve Dashboard Page Performance ([f6a873a](https://github.com/qlaffont/monity/commit/f6a873a9aee0ca870e3595db30559cab2778e8b8))
+* **dashboard:** improve dashboard service ([939214a](https://github.com/qlaffont/monity/commit/939214ab7d3b8458e0a94f2608d00af83971f96d))
+* **dashboard:** remove Unuse field ([a6a61ea](https://github.com/qlaffont/monity/commit/a6a61ea0b46e55af0d2e1795f5923e261dcd5bf6))
+
 
 ## 1.0.3 (2020-03-03)
 

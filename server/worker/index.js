@@ -107,6 +107,16 @@ const clean = () => {
   });
 };
 
+/**
+ * Launch Cache System
+ */
+
+const cache = () => {
+  crons["cache"] = new CronJob('*/5 * * * *', () => {
+    parentPort.postMessage({ cmd: 'cache' });
+  });
+};
+
 parentPort.on('message', function(data) {
   if (typeof data === 'object') {
     if (process.env.DEBUG_WORKER && data.cmd && data.cmd !== 'info') {
@@ -127,6 +137,8 @@ parentPort.on('message', function(data) {
         info();
       case 'clean':
         clean();
+      case 'cache':
+        cache();
       default:
     }
   }
