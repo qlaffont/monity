@@ -17,7 +17,7 @@ export default (app: FastifyInstance, worker): void => {
   GroupsRoutes(app);
   MetricsRoutes(app);
   CheckersRoutes(app, worker);
-  DashboardRoutes(app, worker);
+  DashboardRoutes(app);
 
   metricsWorker(app, worker);
   checkersWorker(app, worker);

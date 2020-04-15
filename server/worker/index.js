@@ -1,7 +1,6 @@
 const { parentPort, isMainThread } = require('worker_threads');
 const { CronJob } = require('cron');
-const { ping } = require('tcp-ping');
-const fetch = require('node-fetch');
+const { ping, http } = require('../services/fetch/fetch');
 
 const crons = {};
 
@@ -14,12 +13,8 @@ if (isMainThread) {
  * @param {*} data (address, port, id)
  */
 const pingCall = data => {
-  ping({ address: data.address, port: data.port, timeout: 1000 }, (err, res) => {
-    if (err || Number.isNaN(res.avg)) {
-      parentPort.postMessage({ cmd: 'cb', id: data.id, ms: 0, code: 500 });
-    } else {
-      parentPort.postMessage({ cmd: 'cb', id: data.id, ms: Math.round(res.avg), code: 200 });
-    }
+  ping(data, (res) => {
+    parentPort.postMessage({cmd: 'cb', ...res});
   });
 };
 
@@ -28,36 +23,8 @@ const pingCall = data => {
  * @param {*} data (address, id)
  */
 const httpCall = data => {
-  const arrayCall = [];
-
-  const prom = data => {
-    return new Promise(resolve => {
-      const dateStart = Date.now();
-      fetch(data.address, { redirect: 'manual' })
-        .then(res => {
-          const dateEnd = Date.now();
-          const ms = dateEnd - dateStart;
-          resolve({ statusCode: res.status, ms });
-        })
-        .catch(() => {
-          const dateEnd = Date.now();
-          const ms = dateEnd - dateStart;
-          resolve({ statusCode: 500, ms });
-        });
-    });
-  };
-
-  for (let index = 0; index < 10; index++) {
-    arrayCall.push(prom(data));
-  }
-
-  Promise.all(arrayCall).then(res => {
-    let sum = 0;
-    res.map(val => {
-      sum += val.ms;
-    });
-    const avg = sum / res.length;
-    parentPort.postMessage({ cmd: 'cb', id: data.id, ms: Math.round(avg), code: res[0].statusCode });
+  http(data, (res) => {
+    parentPort.postMessage({cmd: 'cb', ...res});
   });
 };
 
@@ -129,12 +96,6 @@ parentPort.on('message', function(data) {
     }
 
     switch (data.cmd) {
-      case 'init':
-        start(data);
-        break;
-      case 'stop':
-        stop(data);
-        break;
       case 'info':
         info();
         break;
@@ -145,6 +106,18 @@ parentPort.on('message', function(data) {
         cache();
         break;
       default:
+    }
+
+    if(!process.env.ENABLE_CRONTAB){
+      switch (data.cmd) {
+        case 'init':
+          start(data);
+          break;
+        case 'stop':
+          stop(data);
+          break;
+        default:
+      }
     }
   }
 });
