@@ -6,6 +6,7 @@ import { CheckersService } from './../components/checkers/checkersService';
 import { MetricsService } from '../components/metrics/metricsService';
 import { ping, http } from '../services/fetch/fetch';
 import { CheckerType } from '../components/checkers/checkersModel';
+import { DashboardService } from '../components/dashboard/dashboardService';
 
 const getKeyFormat = (date: number): string => {
   const options = {
@@ -92,6 +93,22 @@ const executeChecker = async (checkers): Promise<void> => {
   await Promise.all(promsArray);
 };
 
+const executeClean = async () => {
+  const cron = '* * */8 * *';
+
+  if (cronNeedToBeExecuted(cron)) {
+    await MetricsService.cleanOldMetric();
+  }
+};
+
+const executeCache = async () => {
+  const cron = '*/5 * * * *';
+
+  if (cronNeedToBeExecuted(cron)) {
+    await DashboardService.loadCache();
+  }
+};
+
 const run = async (): Promise<void> => {
   await mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
@@ -103,6 +120,9 @@ const run = async (): Promise<void> => {
   const checkers = await getCheckersToRun();
 
   await executeChecker(checkers);
+
+  await executeClean();
+  await executeCache();
 
   await mongoose.connection.close();
 };

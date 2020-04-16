@@ -86,30 +86,26 @@ const cache = () => {
   crons["cache"].start();
 };
 
-parentPort.on('message', function(data) {
-  if (typeof data === 'object') {
-    if (process.env.DEBUG_WORKER && data.cmd && data.cmd !== 'info') {
-      parentPort.postMessage({
-        cmd: 'debug',
-        log: 'W CMD -> ' + JSON.stringify(data),
-      });
-    }
+if(!process.env.ENABLE_CRONTAB){
+  parentPort.on('message', function(data) {
+    if (typeof data === 'object') {
+      if (process.env.DEBUG_WORKER && data.cmd && data.cmd !== 'info') {
+        parentPort.postMessage({
+          cmd: 'debug',
+          log: 'W CMD -> ' + JSON.stringify(data),
+        });
+      }
 
-    switch (data.cmd) {
-      case 'info':
-        info();
-        break;
-      case 'clean':
-        clean();
-        break;
-      case 'cache':
-        cache();
-        break;
-      default:
-    }
-
-    if(!process.env.ENABLE_CRONTAB){
       switch (data.cmd) {
+        case 'info':
+          info();
+          break;
+        case 'clean':
+          clean();
+          break;
+        case 'cache':
+          cache();
+          break;
         case 'init':
           start(data);
           break;
@@ -119,5 +115,5 @@ parentPort.on('message', function(data) {
         default:
       }
     }
-  }
-});
+  });
+}
