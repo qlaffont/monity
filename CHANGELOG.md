@@ -1,3 +1,10 @@
+## [1.1.0](https://github.com/qlaffont/monity/compare/1.0.5...1.10) (2020-04-16)
+
+### Features
+
+* **cron:** add the possibility to use Kernel crontab ([2f7af46](https://github.com/qlaffont/monity/commit/2f7af4643b0da49ea34a6cc1cb8f15f6ccb10738))
+
+
 ## [1.0.5](https://github.com/qlaffont/monity/compare/1.0.4...1.0.5) (2020-04-03)
 
 
