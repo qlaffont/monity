@@ -27,7 +27,11 @@ export class MetricsService {
   public static async addMetric(options: MetricAddDataType): Promise<MetricType | Error> {
     const metricData = new Metric(options);
 
-    if (!options.ms || !options.statusCode || !options.checkerId) throw Error('ms, statusCode, checkerId is required');
+    if (!options.statusCode || !options.checkerId) throw Error('statusCode, checkerId is required');
+
+    if (!options.hasOwnProperty('ms')) {
+      throw Error('ms is required');
+    }
 
     const checker = await Checker.findById(options.checkerId);
 
@@ -120,14 +124,18 @@ export class MetricsService {
   }
 
   public static async sendWebhookNotif(options: MetricAddDataType): Promise<void> {
-    if (!options.ms || !options.statusCode || !options.checkerId) throw Error('ms, statusCode, checkerId is required');
+    if (!options.statusCode || !options.checkerId) throw Error('statusCode, checkerId is required');
+
+    if (!options.hasOwnProperty('ms')) {
+      throw Error('ms is required');
+    }
 
     if (process.env.WEBHOOK_URL) {
       const checker = await Checker.findById(options.checkerId);
       if (!checker) throw new Error('Checker Not Found');
 
       const metric = await Metric.findOne({ checkerId: options.checkerId })
-        .sort('metricsDate')
+        .sort('-metricsDate')
         .exec();
 
       if (metric && options.statusCode !== metric.statusCode) {
@@ -166,12 +174,14 @@ export class MetricsService {
           username: 'Monity',
         }).replace(/\\\\n/g, '\\n');
 
-        // Send Notification
-        await fetch(process.env.WEBHOOK_URL, {
-          method: 'post',
-          body,
-          headers: { 'Content-Type': 'application/json' },
-        });
+        try {
+          // Send Notification
+          await fetch(process.env.WEBHOOK_URL, {
+            method: 'post',
+            body,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        } catch (error) {}
       }
     }
   }

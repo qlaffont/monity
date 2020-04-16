@@ -140,7 +140,14 @@ describe('Worker', () => {
     }, 10000);
 
     it('should return value 500 if problem with port or ip', done => {
-      const data = { cmd: 'init', type: 'ping', address: '216.239.38.117', port: 800, cron: '*/3 * * * * *', id: '57' };
+      const data = {
+        cmd: 'init',
+        type: 'ping',
+        address: '999.999.999.999',
+        port: 9999,
+        cron: '*/3 * * * * *',
+        id: '57',
+      };
       worker.postMessage(data);
       worker.on('message', msg => {
         if (msg && msg.cmd === 'cb') {
@@ -167,7 +174,6 @@ describe('Worker', () => {
 
     it('should return statusCode if everything is good', done => {
       const data = { cmd: 'init', type: 'http', address: 'https://google.com', cron: '*/3 * * * * *', id: '56' };
-      worker.postMessage(data);
       worker.on('message', msg => {
         if (msg && msg.cmd === 'cb') {
           expect(typeof msg).toBe('object');
@@ -178,7 +184,8 @@ describe('Worker', () => {
           done();
         }
       });
-    }, 10000);
+      worker.postMessage(data);
+    }, 20000);
 
     it('should return value statusCode if problem with port or ip', done => {
       const data = { cmd: 'init', type: 'ping', address: 'https://fakegooglendd.com', cron: '*/3 * * * * *', id: '57' };

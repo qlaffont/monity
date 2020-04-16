@@ -64,6 +64,12 @@ export class CheckersService {
       .exec();
   }
 
+  public static async getActiveCheckers(): Promise<CheckerType[]> {
+    return await Checker.find({
+      active: true,
+    }).exec();
+  }
+
   public static async getCheckerById(id: string): Promise<CheckerType> {
     return await Checker.findById(id)
       .populate('groupId')

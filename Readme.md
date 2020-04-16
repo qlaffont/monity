@@ -60,6 +60,7 @@ To know the process to get auth token, you can go to [http://localhost:5000/setu
 | WEBHOOK_MESSAGE                     | Markdown Message to use for webhook                                                                     | process.env.WEBHOOK_MESSAGE="NEW STATUS" |
 | DISABLE_PROMETHEUS                  | Disable Prometheus Export                                                                               | process.env.DISABLE_PROMETHEUS=true      |
 | DISABLE_AUTOCLEAN                   | Disable Auto Clean Metrics (default: false)                                                             | process.env.DISABLE_AUTOCLEAN=true       |
+| ENABLE_CRONTAB                      | Disable JS Crontab and activate sys crontab (see below)                                                 | process.env.ENABLE_CRONTAB=true          |
 
 ---
 
@@ -80,6 +81,21 @@ Default Message :
 
 ```markdown
 :information_source: **Status Changed** :information_source: \n __Checker__ : **|checkerName|** \n __Status Code__ : ~~*|oldStatusCode|*~~ to ***|newStatusCode|*** \n __Address__ : ***|checkerAddress|*** \n\n Powered by Monity
+```
+
+---
+
+## Activate System Crontab
+
+You can disable JS Crontab execution to use your crontab system.
+
+To do that:
+
+- Launch editor for crontab `crontab -e`
+- Add a cron line
+
+```sh
+* * * * * /myrepo/dist/server/worker/crontab.js > /dev/null
 ```
 
 ---
